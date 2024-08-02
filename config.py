@@ -1,0 +1,6 @@
+SNOWFLAKE_USER = 'user'
+SNOWFLAKE_PASSWORD = 'password'
+SNOWFLAKE_ACCOUNT = 'account'
+SNOWFLAKE_WAREHOUSE = 'warehouse'
+SNOWFLAKE_DATABASE = 'database'
+SNOWFLAKE_SCHEMA = 'schema'
