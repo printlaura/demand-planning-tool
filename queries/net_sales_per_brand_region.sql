@@ -10,4 +10,4 @@ select iff(month(date) > 9,
 from STREAMLIT_POC.SANDBOX.ASIN_TRACKING_DETAILED_VIEW
 where brand = upper('{brand}')
     and region = upper('{region}')
-group by year_month, brand, region
+group by brand, region, year_month

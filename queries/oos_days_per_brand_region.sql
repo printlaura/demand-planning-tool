@@ -16,4 +16,4 @@ oos_data as
 
 select year_month, brand, region, sum(oos)
 from oos_data
-group by year_month, brand, region
+group by brand, region, year_month

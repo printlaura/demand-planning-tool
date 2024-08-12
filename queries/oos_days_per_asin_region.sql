@@ -16,4 +16,4 @@ oos_data as
 
 select year_month, asin, region, sum(oos)
 from oos_data
-group by year_month, asin, region
+group by asin, region, year_month

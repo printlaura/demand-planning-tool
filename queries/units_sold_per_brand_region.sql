@@ -10,5 +10,4 @@ select iff(month(report_date) > 9,
 from STREAMLIT_POC.SANDBOX.STOCK_PERFORMANCE_TEST_VIEW
 where brand = upper('{brand}')
     and region = upper('{region}')
-group by year_month, brand, region
-order by year_month desc
+group by brand, region, year_month
