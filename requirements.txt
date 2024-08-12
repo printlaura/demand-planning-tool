@@ -13,5 +13,5 @@ scikit-learn
 SQLAlchemy
 tensorflow
 keras
-
+python-dotenv
 

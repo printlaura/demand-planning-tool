@@ -1,8 +1,10 @@
 import snowflake.connector
-from config import SNOWFLAKE_USER, SNOWFLAKE_PASSWORD, SNOWFLAKE_ACCOUNT, SNOWFLAKE_WAREHOUSE, SNOWFLAKE_DATABASE, SNOWFLAKE_SCHEMA
+from config import SNOWFLAKE_USER, SNOWFLAKE_PASSWORD, SNOWFLAKE_ACCOUNT, SNOWFLAKE_WAREHOUSE, SNOWFLAKE_DATABASE, \
+    SNOWFLAKE_SCHEMA
+
 
 def get_snowflake_connection():
-    return snowflake.connector.connect(
+    conn = snowflake.connector.connect(
         user=SNOWFLAKE_USER,
         password=SNOWFLAKE_PASSWORD,
         account=SNOWFLAKE_ACCOUNT,
@@ -10,3 +12,4 @@ def get_snowflake_connection():
         database=SNOWFLAKE_DATABASE,
         schema=SNOWFLAKE_SCHEMA
     )
+    return conn

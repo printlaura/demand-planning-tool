@@ -5,7 +5,7 @@ from data.sales_data_preprocessor import SalesDataPreprocessor
 from lstm_model_handler import LSTMModelHandler
 import plotly.express as px
 
-# from data.db_connection import get_snowflake_connection  # Assuming this returns a connection object
+#from data.db_connection import get_snowflake_connection  # Assuming this returns a connection object
 
 st.set_page_config(page_title="Demand Plan Tool", layout="wide")
 
@@ -42,11 +42,11 @@ def main():
 
         month_today = datetime.now().month
         year_today = datetime.now().year
-
         if st.button("Get Forecast"):
             if asin and region:
                 #   preprocessor = SalesDataPreprocessor(get_snowflake_connection(), asin, region, df)
-                preprocessor = SalesDataPreprocessor(df)
+                preprocessor = SalesDataPreprocessor(None, asin, region, df)
+               # preprocessor = SalesDataPreprocessor(df)
                 #   preprocessor.load_data()
                 df_preprocessed = preprocessor.preprocess_data()
 
