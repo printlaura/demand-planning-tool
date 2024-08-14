@@ -5,6 +5,8 @@ from data.sales_data_preprocessor import SalesDataPreprocessor
 from lstm_model_handler import LSTMModelHandler
 import plotly.express as px
 from snowflake_query_executor import SnowflakeQueryExecutor
+from analytics_cases.base_case import BaseAnalyticsCase
+from analytics_cases.units_sold_case import UnitsSoldCase
 
 
 st.set_page_config(page_title="Demand Plan Tool", layout="wide")
@@ -62,10 +64,21 @@ def main():
                 st.error("Please enter an ASIN and Region")
 
 
-"""
+
     elif choice == "Analytics":
-        st.header("Data Analytics")
-"""
+
+        cases = {
+            "Units Sold per Product": UnitsSoldCase,
+        }
+
+        st.title("Data Analytics")
+
+        case_choice = st.selectbox("Select Analytics Case", list(cases.keys()))
+
+        if case_choice:
+            case_class = cases[case_choice]()
+            case_class.render()
+
 
 if __name__ == '__main__':
     main()
