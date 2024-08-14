@@ -7,6 +7,7 @@ import plotly.express as px
 from snowflake_query_executor import SnowflakeQueryExecutor
 from analytics_cases.base_case import BaseAnalyticsCase
 from analytics_cases.units_sold_case import UnitsSoldCase
+from analytics_cases.ad_spends_case import AdSpendsCase
 
 
 st.set_page_config(page_title="Demand Plan Tool", layout="wide")
@@ -68,12 +69,13 @@ def main():
     elif choice == "Analytics":
 
         cases = {
-            "Units Sold per Product": UnitsSoldCase,
+            "Monthly units Sold per ASIN & region": UnitsSoldCase,
+            "Monthly advertisement spend per ASIN & region": AdSpendsCase
         }
 
         st.title("Data Analytics")
 
-        case_choice = st.selectbox("Select Analytics Case", list(cases.keys()))
+        case_choice = st.selectbox("Select analysis report", list(cases.keys()))
 
         if case_choice:
             case_class = cases[case_choice]()

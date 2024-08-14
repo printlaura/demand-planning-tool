@@ -17,3 +17,7 @@ class BaseAnalyticsCase:
             cur.execute(query)
             data = cur.fetchall()
         return data
+
+    def data_to_df(self, data):
+        # Default method, can be overridden by subclasses
+        return pd.DataFrame(data)
