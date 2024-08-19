@@ -27,9 +27,9 @@ class SalesDataPreprocessor:
         self.df = self.df.drop(columns=['FILLED_SALE_PRICE', 'SALE_PRICE', 'ASIN', 'REGION', 'DATE'])
         self._convert_data_types()
         self.df = pd.get_dummies(self.df, columns=['CATEGORY'])
-        self.df = self.df.map(lambda x: 1 if x == True else (0 if x == False else x))
-        self._add_category_columns()
         self.df = pd.get_dummies(self.df, columns=['MONTH'])
+        self.df = self.df.map(lambda x: 1 if x == True else (0 if x == False else x))
+        self._add_dummy_columns()
 
         for column in self.df.columns:
             if self.df[column].dtype == 'bool':
@@ -48,7 +48,7 @@ class SalesDataPreprocessor:
         self.df['UNITS_SOLD'] = self.df['UNITS_SOLD'].astype('float32')
         self.df['PRICE'] = self.df['PRICE'].astype('float32')
 
-    def _add_category_columns(self):
+    def _add_dummy_columns(self):
         category_columns = [
             "CATEGORY_Apparel", "CATEGORY_Art Supplies, Books & Music", "CATEGORY_Beauty & Wellness",
             "CATEGORY_Electronics Others", "CATEGORY_Gadgets & Tech", "CATEGORY_Hardware",
@@ -59,8 +59,17 @@ class SalesDataPreprocessor:
             "CATEGORY_Sports & Outdoor", "CATEGORY_Tablet & eReaders"
         ]
 
+        month_columns = [
+            "MONTH_1", "MONTH_2", "MONTH_3", "MONTH_4", "MONTH_5", "MONTH_6", "MONTH_7", "MONTH_8",
+            "MONTH_9", "MONTH_10", "MONTH_11", "MONTH_12",
+        ]
+
         for column in category_columns:
             if column not in self.df.columns:
                 self.df[column] = 0
 
-        self.df = self.df[['MONTH', 'UNITS_SOLD', 'PRICE'] + category_columns]
+        for column in month_columns:
+            if column not in self.df.columns:
+                self.df[column] = 0
+
+        self.df = self.df[['UNITS_SOLD', 'PRICE'] + category_columns + month_columns]
