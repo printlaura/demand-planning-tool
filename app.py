@@ -4,27 +4,13 @@ from datetime import datetime
 from data.sales_data_preprocessor import SalesDataPreprocessor
 from lstm_model_handler import LSTMModelHandler
 import plotly.express as px
+from snowflake_query_executor import SnowflakeQueryExecutor
+from analytics_cases.base_case import BaseAnalyticsCase
+from analytics_cases.units_sold_case import UnitsSoldCase
+from analytics_cases.ad_spends_case import AdSpendsCase
 
-#from data.db_connection import get_snowflake_connection  # Assuming this returns a connection object
 
 st.set_page_config(page_title="Demand Plan Tool", layout="wide")
-
-"""
-# Fetch data from Snowflake
-@st.cache_resource
-def fetch_data(query):
-    conn = get_snowflake_connection()
-    try:
-        cur = conn.cursor()
-        cur.execute(query)
-        data = cur.fetchall()
-        columns = [desc[0] for desc in cur.description]
-        df = pd.DataFrame(data, columns=columns)
-        return df
-    finally:
-        conn.close()
-"""
-
 
 def main():
     st.title("Demand Plan Tool")
@@ -38,16 +24,14 @@ def main():
         region_options = ["EU", "US", "CA", "UK", "AU", "JP", "MX"]
         region = st.selectbox("Select a region:", region_options)
 
-        df = pd.read_csv('FOR_TESTING_APP.csv')
+        # df = pd.read_csv('FOR_TESTING_APP.csv')
 
         month_today = datetime.now().month
         year_today = datetime.now().year
         if st.button("Get Forecast"):
             if asin and region:
-                #   preprocessor = SalesDataPreprocessor(get_snowflake_connection(), asin, region, df)
-                preprocessor = SalesDataPreprocessor(None, asin, region, df)
-               # preprocessor = SalesDataPreprocessor(df)
-                #   preprocessor.load_data()
+                preprocessor = SalesDataPreprocessor(SnowflakeQueryExecutor(), asin, region)
+                preprocessor.load_data()
                 df_preprocessed = preprocessor.preprocess_data()
 
                 if not df_preprocessed.empty:
@@ -81,10 +65,22 @@ def main():
                 st.error("Please enter an ASIN and Region")
 
 
-"""
+
     elif choice == "Analytics":
-        st.header("Data Analytics")
-"""
+
+        cases = {
+            "Monthly units Sold per ASIN & region": UnitsSoldCase,
+            "Monthly advertisement spend per ASIN & region": AdSpendsCase
+        }
+
+        st.title("Data Analytics")
+
+        case_choice = st.selectbox("Select analysis report", list(cases.keys()))
+
+        if case_choice:
+            case_class = cases[case_choice]()
+            case_class.render()
+
 
 if __name__ == '__main__':
     main()

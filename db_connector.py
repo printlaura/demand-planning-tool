@@ -1,15 +1,26 @@
 import snowflake.connector
+import logging
 from config import SNOWFLAKE_USER, SNOWFLAKE_PASSWORD, SNOWFLAKE_ACCOUNT, SNOWFLAKE_WAREHOUSE, SNOWFLAKE_DATABASE, \
     SNOWFLAKE_SCHEMA
 
 
 def get_snowflake_connection():
-    conn = snowflake.connector.connect(
-        user=SNOWFLAKE_USER,
-        password=SNOWFLAKE_PASSWORD,
-        account=SNOWFLAKE_ACCOUNT,
-        warehouse=SNOWFLAKE_WAREHOUSE,
-        database=SNOWFLAKE_DATABASE,
-        schema=SNOWFLAKE_SCHEMA
-    )
-    return conn
+    logging.basicConfig(level=logging.INFO)
+
+    try:
+        logging.info(f"Connecting to SF with user: {SNOWFLAKE_USER}")
+        conn = snowflake.connector.connect(
+            user=SNOWFLAKE_USER,
+            password=SNOWFLAKE_PASSWORD,
+            account=SNOWFLAKE_ACCOUNT,
+            warehouse=SNOWFLAKE_WAREHOUSE,
+            database=SNOWFLAKE_DATABASE,
+            schema=SNOWFLAKE_SCHEMA
+        )
+        logging.info("Successfully connected.")
+
+        return conn
+
+    except Exception as e:
+        logging.error(f"Error connecting to SF: {e}")
+        raise
