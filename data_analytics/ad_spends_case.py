@@ -12,7 +12,7 @@ class AdSpendsCase(BaseAnalyticsCase):
         region = st.selectbox("Select a region:", ["EU", "US", "CA", "UK", "AU", "JP", "MX"])
        # date_range = st.date_input("Select Date Range", [start_date, end_date])
 
-        query = self.load_sql_query().format(product=asin, region=region)
+        query = self.load_sql_query(asin=asin, region=region)
         data, columns = self.run_query(query)
 
         df = self.data_to_df(data, columns)

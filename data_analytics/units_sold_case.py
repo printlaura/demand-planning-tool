@@ -13,7 +13,7 @@ class UnitsSoldCase(BaseAnalyticsCase):
        # date_range = st.date_input("Select Date Range", [start_date, end_date])
         min_units_sold = st.slider("Minimum Units Sold", 0, 200, 100)
 
-        query = self.load_sql_query().format(asin=asin, region=region, min_units=min_units_sold)
+        query = self.load_sql_query(asin=asin, region=region, min_units=min_units_sold)
         data, columns = self.run_query(query)
 
         df = self.data_to_df(data, columns)

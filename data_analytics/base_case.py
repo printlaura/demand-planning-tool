@@ -27,13 +27,7 @@ class BaseAnalyticsCase:
         if not data or not columns:
             raise ValueError("No data or columns available to convert to DataFrame")
 
-        if isinstance(data, list) and all(isinstance(row, tuple) for row in data):
-            if isinstance(columns, list) and all(isinstance(col, str) for col in columns):
-                return pd.DataFrame(data, columns=columns)
-            else:
-                raise ValueError("Columns should be a list of string column names")
-        else:
-            raise ValueError("Data should be a list of tuples")
+        return pd.DataFrame(data, columns=columns)
 
     def __del__(self):
         self.conn.close()
