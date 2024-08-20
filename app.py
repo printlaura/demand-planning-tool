@@ -6,9 +6,9 @@ from lstm_model_handler import LSTMModelHandler
 import plotly.express as px
 from snowflake_query_executor import SnowflakeQueryExecutor
 from data_analytics.units_sold_case import UnitsSoldCase
-from data_analytics.ad_spends_case import AdSpendsCase
 from data_analytics.units_sold_per_category_region import UnitsSoldPerCategoryCase
 from data_analytics.ad_spent_in_net_sales_per_category_region import PercOfNetSalesSpentInAdCase
+from data_analytics.avg_price_per_asin_region import AvgPricePerASINCase
 
 st.set_page_config(page_title="Demand Plan Tool", layout="wide")
 
@@ -68,10 +68,10 @@ def main():
     elif choice == "Analytics":
 
         cases = {
-            "Monthly units Sold per ASIN & region": UnitsSoldCase,
-            "Monthly advertisement spend per ASIN & region": AdSpendsCase,
+            "Monthly units sold per ASIN & region": UnitsSoldCase,
             "Monthly units sold per category": UnitsSoldPerCategoryCase,
-            "% of Net Sales spent in advertisement per category": PercOfNetSalesSpentInAdCase
+            "% of net sales spent in ads per category": PercOfNetSalesSpentInAdCase,
+            "Average sale price per ASIN & region": AvgPricePerASINCase
         }
 
         st.title("Data Analytics")
