@@ -35,7 +35,6 @@ class SalesDataPreprocessor:
             if self.df[column].dtype == 'bool':
                 self.df[column] = self.df[column].astype(int)
 
-        print(self.df.columns)
         print("Data preprocessed successfully.")
         return self.df
 

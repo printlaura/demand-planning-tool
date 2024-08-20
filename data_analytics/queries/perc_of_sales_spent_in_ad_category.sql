@@ -31,7 +31,7 @@ net_sales as
 select category,
         region,
         year_month,
-        cast(round(div0(sum(ad_spend) * 100,sum(net_sales)), 2) as varchar) || ' ' || '%' as perc_spent_in_ad
+        round(div0(sum(ad_spend) * 100,sum(net_sales)), 2) as "% of net sales spent in ad"
 from net_sales a
 where region = upper('{region}')
     and year_month = '{year_month}'

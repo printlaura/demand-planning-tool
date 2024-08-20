@@ -8,7 +8,6 @@ def get_snowflake_connection():
     logging.basicConfig(level=logging.INFO)
 
     try:
-        logging.info(f"Connecting to SF with user: {SNOWFLAKE_USER}")
         conn = snowflake.connector.connect(
             user=SNOWFLAKE_USER,
             password=SNOWFLAKE_PASSWORD,
@@ -17,7 +16,7 @@ def get_snowflake_connection():
             database=SNOWFLAKE_DATABASE,
             schema=SNOWFLAKE_SCHEMA
         )
-        logging.info("Successfully connected.")
+        logging.info("Successfully connected to Snowflake.")
 
         return conn
 
