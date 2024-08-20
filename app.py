@@ -1,23 +1,23 @@
 import pandas as pd
 import streamlit as st
 from datetime import datetime
-from data.sales_data_preprocessor import SalesDataPreprocessor
+from sales_data_preprocessor import SalesDataPreprocessor
 from lstm_model_handler import LSTMModelHandler
 import plotly.express as px
 from snowflake_query_executor import SnowflakeQueryExecutor
-from analytics_cases.base_case import BaseAnalyticsCase
-from analytics_cases.units_sold_case import UnitsSoldCase
-from analytics_cases.ad_spends_case import AdSpendsCase
-
+from data_analytics.units_sold_case import UnitsSoldCase
+from data_analytics.ad_spends_case import AdSpendsCase
+from data_analytics.units_sold_per_category_region import UnitsSoldPerCategoryCase
 
 st.set_page_config(page_title="Demand Plan Tool", layout="wide")
 
+
 def main():
     st.title("Demand Plan Tool")
-    menu = ["Sales Forecast", "Analytics"]
+    menu = ["Sales Predictor", "Analytics"]
     choice = st.sidebar.selectbox("Select Option", menu)
 
-    if choice == "Sales Forecast":
+    if choice == "Sales Predictor":
         st.header("Sales Forecast")
 
         asin = st.text_input("Enter ASIN:", "")
@@ -64,13 +64,12 @@ def main():
             else:
                 st.error("Please enter an ASIN and Region")
 
-
-
     elif choice == "Analytics":
 
         cases = {
             "Monthly units Sold per ASIN & region": UnitsSoldCase,
-            "Monthly advertisement spend per ASIN & region": AdSpendsCase
+            "Monthly advertisement spend per ASIN & region": AdSpendsCase,
+            "Monthly units sold per category": UnitsSoldPerCategoryCase
         }
 
         st.title("Data Analytics")

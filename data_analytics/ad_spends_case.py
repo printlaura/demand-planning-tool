@@ -4,7 +4,7 @@ import streamlit as st
 
 class AdSpendsCase(BaseAnalyticsCase):
     def __init__(self):
-        super().__init__('queries/ad_spend_per_unit_sold.sql')
+        super().__init__('data_analytics/queries/ad_spend_per_unit_sold.sql')
 
     def render(self):
         st.title("Monthly advertisement spends per unit sold per ASIN & region")
