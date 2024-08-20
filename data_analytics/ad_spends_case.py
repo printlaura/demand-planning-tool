@@ -1,4 +1,4 @@
-from analytics_cases.base_case import BaseAnalyticsCase
+from data_analytics.base_case import BaseAnalyticsCase
 import streamlit as st
 
 
@@ -13,8 +13,8 @@ class AdSpendsCase(BaseAnalyticsCase):
        # date_range = st.date_input("Select Date Range", [start_date, end_date])
 
         query = self.load_sql_query().format(product=asin, region=region)
-        data = self.run_query(query)
+        data, columns = self.run_query(query)
 
-        df = self.data_to_df(data)
+        df = self.data_to_df(data, columns)
         st.dataframe(df)
         st.bar_chart(df.set_index("ASIN"))
