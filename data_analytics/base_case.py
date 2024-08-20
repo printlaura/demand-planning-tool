@@ -16,7 +16,11 @@ class BaseAnalyticsCase:
         with self.conn.cursor() as cur:
             cur.execute(query)
             data = cur.fetchall()
-        return data
+            columns = [col[0] for col in cur.description]
+        return data, columns
 
-    def data_to_df(self, data):
-        return pd.DataFrame(data)
+    def data_to_df(self, data, columns):
+        return pd.DataFrame(data, columns=columns)
+
+    def __del__(self):
+        self.conn.close()
