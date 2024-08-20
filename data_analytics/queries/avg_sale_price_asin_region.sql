@@ -1,6 +1,6 @@
 -- avg monthly sale price per ASIN/region
 
-select avg(sale_price) as sale_price,
+select avg(sale_price) as "average sale price",
         asin,
        region,
        iff(month(date) > 9,
