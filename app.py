@@ -25,8 +25,6 @@ def main():
         region_options = ["EU", "US", "CA", "UK", "AU", "JP", "MX"]
         region = st.selectbox("Select a region:", region_options)
 
-        # df = pd.read_csv('FOR_TESTING_APP.csv')
-
         month_today = datetime.now().month
         year_today = datetime.now().year
         if st.button("Get Forecast"):

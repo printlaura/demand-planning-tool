@@ -1,7 +1,4 @@
-from abc import ABC
-
 import numpy as np
-import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.utils import register_keras_serializable
 from tensorflow.keras.layers import LSTM
