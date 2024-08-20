@@ -22,5 +22,6 @@ from
     from STREAMLIT_POC.SANDBOX.STOCK_PERFORMANCE_TEST_VIEW a
     left join category b
     on a.asin = b.asin
+    where region = upper('{region}')
 )
 group by year_month, category, region

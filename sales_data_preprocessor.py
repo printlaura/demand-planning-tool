@@ -10,7 +10,7 @@ class SalesDataPreprocessor:
         self.df = df
 
     def load_data(self):
-        with open('queries/sales_data_for_prediction.sql', 'r') as file:
+        with open('sales_data_for_prediction.sql', 'r') as file:
             query = file.read().format(asin=self.asin, region=self.region)
 
         self.df = SnowflakeQueryExecutor.execute_query(query)
@@ -35,7 +35,6 @@ class SalesDataPreprocessor:
             if self.df[column].dtype == 'bool':
                 self.df[column] = self.df[column].astype(int)
 
-        print(self.df.columns)
         print("Data preprocessed successfully.")
         return self.df
 
