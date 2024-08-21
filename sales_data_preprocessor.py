@@ -13,7 +13,12 @@ class SalesDataPreprocessor:
         with open('sales_data_for_prediction.sql', 'r') as file:
             query = file.read().format(asin=self.asin, region=self.region)
 
-        self.df = SnowflakeQueryExecutor.execute_query(query)
+        response = self.snowflake_executor.execute_query(query)
+
+        if response is not None and not response.empty:
+            self.df = response
+        else:
+            raise ValueError("No data retrieved from query.")
 
     def preprocess_data(self):
         if self.df is None:

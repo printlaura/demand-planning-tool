@@ -11,8 +11,8 @@ joblib
 Jinja2
 numpy
 scikit-learn
-SQLAlchemy
 tensorflow
 keras
 python-dotenv
+pytest
 
