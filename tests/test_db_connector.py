@@ -6,20 +6,26 @@ from snowflake.connector.errors import DatabaseError
 import sys
 
 sys.modules['config'] = mock.Mock()
-from config import SNOWFLAKE_USER, SNOWFLAKE_PASSWORD, SNOWFLAKE_ACCOUNT, SNOWFLAKE_WAREHOUSE, SNOWFLAKE_DATABASE, SNOWFLAKE_SCHEMA
+from config import SNOWFLAKE_USER, SNOWFLAKE_PASSWORD, SNOWFLAKE_ACCOUNT, SNOWFLAKE_WAREHOUSE, SNOWFLAKE_DATABASE, \
+    SNOWFLAKE_SCHEMA
 
 
 @pytest.fixture
 def mock_snowflake_connect(monkeypatch):
+
     mock_conn = mock.Mock()
     monkeypatch.setattr('snowflake.connector.connect', mock.Mock(return_value=mock_conn))
+
     return mock_conn
 
 
 def test_get_snowflake_connection_success(mock_snowflake_connect):
+
     conn = get_snowflake_connection()
+
     assert conn is not None
     assert mock_snowflake_connect.called
+
     mock_snowflake_connect.assert_called_with(
         user=SNOWFLAKE_USER,
         password=SNOWFLAKE_PASSWORD,
@@ -31,6 +37,7 @@ def test_get_snowflake_connection_success(mock_snowflake_connect):
 
 
 def test_get_snowflake_connection_failure(monkeypatch):
+
     with mock.patch('snowflake.connector.connect') as mock_connect:
         mock_connect.side_effect = DatabaseError("Failed to connect")
 
