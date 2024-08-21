@@ -40,6 +40,8 @@ def test_preprocess_data_without_load(setup_snowflake_executor):
 
 def test_preprocess_data_success(setup_snowflake_executor):
     processor = SalesDataPreprocessor(setup_snowflake_executor, "B001234", "US", df=pd.DataFrame({
+        'ASIN': "B001234",
+        'REGION': "US",
         'YEAR': [2021],
         'MONTH': [1],
         'SALE_PRICE': [100],
