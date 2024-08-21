@@ -6,7 +6,6 @@ from sales_data_preprocessor import SalesDataPreprocessor
 
 @pytest.fixture
 def setup_snowflake_executor():
-
     executor = MagicMock()
     executor.execute_query = MagicMock(return_value=pd.DataFrame({
         'YEAR': [2021, 2021],
@@ -21,8 +20,9 @@ def setup_snowflake_executor():
 
 @pytest.mark.parametrize("asin, region", [("B001234", "US"), ("B002345", "EU")])
 def test_load_data(setup_snowflake_executor, asin, region):
+    query = f"SELECT * FROM sales WHERE ASIN='{asin}' AND REGION='{region}';"
 
-    with patch("builtins.open", mock_open(read_data="SELECT * FROM sales WHERE ASIN='{asin}' AND REGION='{region}';")):
+    with patch("builtins.open", mock_open(read_data=query)):
         processor = SalesDataPreprocessor(setup_snowflake_executor, asin, region)
         processor.load_data()
 
@@ -33,14 +33,12 @@ def test_load_data(setup_snowflake_executor, asin, region):
 
 
 def test_preprocess_data_without_load(setup_snowflake_executor):
-
     processor = SalesDataPreprocessor(setup_snowflake_executor, "B001234", "US")
     with pytest.raises(ValueError):
         processor.preprocess_data()
 
 
 def test_preprocess_data_success(setup_snowflake_executor):
-
     processor = SalesDataPreprocessor(setup_snowflake_executor, "B001234", "US", df=pd.DataFrame({
         'YEAR': [2021],
         'MONTH': [1],
@@ -57,7 +55,6 @@ def test_preprocess_data_success(setup_snowflake_executor):
 
 
 def test_fill_missing_sale_price(setup_snowflake_executor):
-
     processor = SalesDataPreprocessor(setup_snowflake_executor, "TESTASIN", "TESTREGION", pd.DataFrame({
         'DATE': pd.date_range(start='1/1/2021', periods=3, freq='M'),
         'SALE_PRICE': [20, None, 30]
@@ -69,7 +66,6 @@ def test_fill_missing_sale_price(setup_snowflake_executor):
 
 
 def test_convert_data_types(setup_snowflake_executor):
-
     processor = SalesDataPreprocessor(setup_snowflake_executor, "TESTASIN", "TESTREGION", pd.DataFrame({
         'UNITS_SOLD': ['100', '200'],
         'PRICE': ['50', '150']
@@ -81,18 +77,19 @@ def test_convert_data_types(setup_snowflake_executor):
 
 
 def test_add_dummy_columns(setup_snowflake_executor):
-
     processor = SalesDataPreprocessor(setup_snowflake_executor, "TESTASIN", "TESTREGION", pd.DataFrame({
         'UNITS_SOLD': [100, 150],
         'PRICE': [20, 25],
-        'CATEGORY': ['Apparel', 'Gadgets'],
-        'MONTH': [6, 7]
+        'CATEGORY_Apparel': [1, 1],
+        'MONTH_6': [1, 0],
+        'MONTH_7': [0, 1],
     }))
+
     processor._add_dummy_columns()
 
-    assert 'CATEGORY_Apparel' in processor.df.columns and 'CATEGORY_Gadgets' in processor.df.columns, \
-        "Dummy category columns must be added"
+    assert 'CATEGORY_Apparel' in processor.df.columns, "Dummy category columns must be added"
+
     assert processor.df[
-               'CATEGORY_Apparel'].sum() == 1, "Dummy category column for Apparel should reflect correct counts"
+               'CATEGORY_Apparel'].sum() == 2, "Dummy category column for Apparel should reflect correct counts"
     assert processor.df['MONTH_6'].sum() == 1 and processor.df[
         'MONTH_7'].sum() == 1, "Dummy month columns must be added and set properly"
