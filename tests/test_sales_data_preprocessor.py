@@ -50,7 +50,8 @@ def test_preprocess_data_success(setup_snowflake_executor):
     }))
     processed_df = processor.preprocess_data()
 
-    assert 'PRICE' in processed_df.columns, "PRICE column should exist after preprocessing"
+    assert 'PRICE' in processed_df.columns, "There should be a PRICE columns after preprocessing"
+
     assert all(
         isinstance(processed_df[col].dtype, pd.api.types.CategoricalDtype) or processed_df[col].dtype in [int, float]
         for col in processed_df.columns), "Data types should be properly converted or categorized"
