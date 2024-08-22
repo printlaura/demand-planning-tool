@@ -116,8 +116,11 @@ def analytics():
     }
     case_choice = st.selectbox("Select analysis report", list(cases.keys()))
     if case_choice:
-        case_class = cases[case_choice](connection=st.session_state["sf_connection"])
-        case_class.render()
+        if "sf_connection" in st.session_state:
+            case_class = cases[case_choice](connection=st.session_state["sf_connection"])
+            case_class.render()
+        else:
+            st.error("Snowflake database connection not found.")
 
 
 if __name__ == "__main__":
