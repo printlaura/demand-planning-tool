@@ -48,6 +48,7 @@ def user_login():
 
 
 def page_navigation():
+
     current_page = st.session_state.get("current_page", "Home")
 
     if current_page == "Home":
@@ -65,6 +66,12 @@ def analytics_and_forecasting_sidebar():
     if st.sidebar.button(f"Go to {toggle_page}"):
         st.session_state["current_page"] = toggle_page
         st.rerun()
+
+    st.sidebar.write("")
+    st.sidebar.write("")
+    st.sidebar.write("")
+    st.sidebar.write("")
+    st.sidebar.write("")
 
     if st.sidebar.button("Log out"):
         logout()
@@ -95,10 +102,10 @@ def sales_predictor():
     region = st.selectbox("Select a region:", region_options)
 
     if st.button("Get Forecast"):
-        if asin and region:
-            predictor(asin, region)
+        if not asin or not region:
+            st.error("Please enter an ASIN and region")
         else:
-            st.error("Please enter an ASIN and Region")
+            predictor(asin, region)
 
 
 def predictor(asin, region):
