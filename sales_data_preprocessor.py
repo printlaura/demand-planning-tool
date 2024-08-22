@@ -1,23 +1,20 @@
 import pandas as pd
-from snowflake_query_executor import SnowflakeQueryExecutor
 
 
 class SalesDataPreprocessor:
-    def __init__(self, snowflake_executor, asin, region, df=None):
-        self.snowflake_executor = snowflake_executor
+    def __init__(self, sf_query_executor, asin, region, df=None):
+        self.sf_query_executor = sf_query_executor
         self.asin = asin
         self.region = region
         self.df = df
 
-    def load_data(self):
+    def load_data(self, conn):
         with open('sales_data_for_prediction.sql', 'r') as file:
             query = file.read().format(asin=self.asin, region=self.region)
 
-        response = self.snowflake_executor.execute_query(query)
+        self.df = self.sf_query_executor.execute_query(query, conn)
 
-        if response is not None and not response.empty:
-            self.df = response
-        else:
+        if self.df is None or self.df.empty:
             raise ValueError("No data retrieved from query.")
 
     def preprocess_data(self):
