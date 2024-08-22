@@ -1,11 +1,10 @@
 import pandas as pd
-from db_connector import get_snowflake_connection
 
 
 class BaseAnalyticsCase:
-    def __init__(self, sql_file):
+    def __init__(self, sql_file, conn):
         self.sql_file = sql_file
-        self.conn = get_snowflake_connection()
+        self.conn = conn
 
     def load_sql_query(self, **filters):
         with open(self.sql_file, 'r') as file:

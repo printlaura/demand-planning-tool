@@ -3,8 +3,9 @@ import streamlit as st
 
 
 class UnitsSoldPerCategoryCase(BaseAnalyticsCase):
-    def __init__(self):
+    def __init__(self, connection):
         super().__init__('data_analytics/queries/units_sold_per_category_region.sql')
+        self.connection = connection
 
     def render(self):
         st.title("Monthly units sold per category")
