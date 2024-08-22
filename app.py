@@ -18,11 +18,11 @@ def main():
     if "logged_in" not in st.session_state or st.session_state["logged_in"] is False:
         user_login()
     else:
-        user_interaction()
+        page_navigation()
 
 
 def user_login():
-    st.title("log in to DPT")
+    st.title(" log in to DPT")
 
     with st.form("Login Form"):
         username = st.text_input("user name")
@@ -37,25 +37,61 @@ def user_login():
                     st.session_state["logged_in"] = True
                     st.session_state["sf_connection"] = connection
                     st.session_state["sf_user"] = username
+                    st.session_state["current_page"] = "Home"
                     st.rerun()
                 else:
                     st.warning("Failed to log in. Either user name or password are incorrect.")
 
             except Exception as e:
-                st.error("Failed to log in. Either user name or password are incorrect.")
+                st.error("Login failed. Either user name or password are incorrect.")
                 st.exception(e)
 
 
-def user_interaction():
+def page_navigation():
+    #sidebar()
+
+    current_page = st.session_state.get("current_page", "Home")
+
+    if current_page == "Home":
+        home()
+    elif current_page in ["Forecasting", "Analytics"]:
+        analytics_and_forecasting_sidebar()
+        if current_page == "Forecasting":
+            sales_predictor()
+        elif current_page == "Analytics":
+            analytics()
+
+
+def analytics_and_forecasting_sidebar():
+    toggle_page = "Analytics" if st.session_state["current_page"] == "Forecasting" else "Forecasting"
+    if st.sidebar.button(f"Go to {toggle_page}"):
+        st.session_state["current_page"] = toggle_page
+        st.rerun()
+
+    st.sidebar.write("")
+    st.sidebar.write("")
+    st.sidebar.write("")
+    st.sidebar.write("")
+    st.sidebar.write("")
+    if st.sidebar.button("Log out"):
+        logout()
+
+
+def home():
     st.title(f"welcome, {st.session_state['sf_user']}.")
 
-    menu = ["Forecasting", "Analytics"]
-    choice = st.sidebar.selectbox("Select option", menu)
+    if st.button("Go to Forecasting"):
+        st.session_state["current_page"] = "Forecasting"
+        st.rerun()
+    if st.button("Go to Analytics"):
+        st.session_state["current_page"] = "Analytics"
+        st.rerun()
 
-    if choice == "Forecasting":
-        sales_predictor()
-    elif choice == "Analytics":
-        analytics()
+
+def logout():
+    for key in list(st.session_state.keys()):
+        del st.session_state[key]
+    st.rerun()
 
 
 def sales_predictor():
@@ -94,6 +130,8 @@ def predictor(asin, region):
             } for m, sales in enumerate(predictions, start=1)]
 
             df_forecast = pd.DataFrame(forecast_data)
+
+            st.write(df_forecast.to_html(index=False), unsafe_allow_html=True)
             fig = px.line(df_forecast, x='Date', y='Predicted sales in units', title='Forecast')
             st.plotly_chart(fig)
         else:
