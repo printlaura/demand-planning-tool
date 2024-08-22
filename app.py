@@ -1,10 +1,11 @@
 import pandas as pd
 import streamlit as st
 from datetime import datetime
-from sales_data_preprocessor import SalesDataPreprocessor
-from lstm_model_handler import LSTMModelHandler
 import plotly.express as px
 from snowflake_query_executor import SnowflakeQueryExecutor
+from db_connector import get_snowflake_connection
+from sales_data_preprocessor import SalesDataPreprocessor
+from lstm_model_handler import LSTMModelHandler
 from data_analytics.units_sold_case import UnitsSoldCase
 from data_analytics.units_sold_per_category_region import UnitsSoldPerCategoryCase
 from data_analytics.ad_spent_in_net_sales_per_category_region import PercOfNetSalesSpentInAdCase
@@ -14,72 +15,113 @@ st.set_page_config(page_title="Demand Plan Tool", layout="wide")
 
 
 def main():
-    st.title("Demand Plan Tool")
-    menu = ["Sales Predictor", "Analytics"]
-    choice = st.sidebar.selectbox("Select Option", menu)
+    if "logged_in" not in st.session_state or st.session_state["logged_in"] is False:
+        user_login()
+    else:
+        user_interaction()
 
-    if choice == "Sales Predictor":
-        st.header("Sales Forecast")
 
-        asin = st.text_input("Enter ASIN:", "")
-        region_options = ["EU", "US", "CA", "UK", "AU", "JP", "MX"]
-        region = st.selectbox("Select a region:", region_options)
+def user_login():
+    st.title("log in to DPT")
 
-        month_today = datetime.now().month
-        year_today = datetime.now().year
-        if st.button("Get Forecast"):
-            if asin and region:
-                preprocessor = SalesDataPreprocessor(SnowflakeQueryExecutor(), asin, region)
-                preprocessor.load_data()
-                df_preprocessed = preprocessor.preprocess_data()
+    with st.form("Login Form"):
+        username = st.text_input("user name")
+        password = st.text_input("password", type="password")
+        submitted = st.form_submit_button("log in")
 
-                if not df_preprocessed.empty:
-                    model_handler = LSTMModelHandler()
-                    predictions = model_handler.predict(df_preprocessed)
+        if submitted and username and password:
+            try:
+                connection = get_snowflake_connection(user=username, password=password)
 
-                    forecast_data = []
-
-                    for month, sales in enumerate(predictions, start=1):
-                        total_months = month_today + month
-                        predicted_month = (total_months - 1) % 12 + 1
-                        predicted_year = year_today + (total_months - 1) // 12
-
-                        predicted_date = datetime(predicted_year, predicted_month, 1)
-                        forecast_data.append({'Date': predicted_date.strftime('%B %Y'), 'Predicted units sold': sales})
-
-                    df_forecast = pd.DataFrame(forecast_data)
-
-                    # visualize
-                    st.subheader("Forecasted units sold")
-                    fig = px.line(df_forecast, x='Date', y='Predicted units sold', title='Sales Forecast')
-                    fig.update_layout(xaxis_title='Date', yaxis_title='Predicted units sold', template='plotly_white')
-                    st.plotly_chart(fig)
-
-                    st.subheader("Forecasted units sold")
-                    st.write(df_forecast.to_html(index=False), unsafe_allow_html=True)
-
+                if connection:
+                    st.session_state["logged_in"] = True
+                    st.session_state["sf_connection"] = connection
+                    st.session_state["sf_user"] = username
+                    st.rerun()
                 else:
-                    st.error("No data found for the given ASIN and Region.")
-            else:
-                st.error("Please enter an ASIN and Region")
+                    st.warning("Failed to log in. Either user name or password are incorrect.")
 
+            except Exception as e:
+                st.error("Failed to log in. Either user name or password are incorrect.")
+                st.exception(e)
+
+
+def user_interaction():
+    st.title(f"welcome, {st.session_state['sf_user']}.")
+
+    menu = ["Forecasting", "Analytics"]
+    choice = st.sidebar.selectbox("Select option", menu)
+
+    if choice == "Forecasting":
+        sales_predictor()
     elif choice == "Analytics":
+        analytics()
 
-        cases = {
-            "Monthly units sold per ASIN & region": UnitsSoldCase,
-            "Monthly units sold per category": UnitsSoldPerCategoryCase,
-            "% of net sales spent in ads per category": PercOfNetSalesSpentInAdCase,
-            "Average sale price per ASIN & region": AvgPricePerASINCase
-        }
 
-        st.title("Data Analytics")
+def sales_predictor():
+    st.header("Sales Predictor")
 
-        case_choice = st.selectbox("Select analysis report", list(cases.keys()))
+    asin = st.text_input("Enter ASIN:", "")
+    region_options = ["EU", "US", "CA", "UK", "AU", "JP", "MX"]
+    region = st.selectbox("Select a region:", region_options)
+    month_today = datetime.now().month
+    year_today = datetime.now().year
 
-        if case_choice:
-            case_class = cases[case_choice]()
+    if st.button("Get Forecast"):
+        if asin and region:
+            predictor(asin, region)
+        else:
+            st.error("Please enter an ASIN and Region")
+
+
+def predictor(asin, region):
+    month_today = datetime.now().month
+    year_today = datetime.now().year
+
+    try:
+        conn = st.session_state["sf_connection"]
+
+        preprocessor = SalesDataPreprocessor(SnowflakeQueryExecutor, asin=asin, region=region)
+        preprocessor.load_data(conn)
+
+        df_preprocessed = preprocessor.preprocess_data()
+
+        if not df_preprocessed.empty:
+            model_handler = LSTMModelHandler()
+            predictions = model_handler.predict(df_preprocessed)
+            forecast_data = [{
+                'Date': datetime(year_today + (month_today + m - 1) // 12,
+                                 (month_today + m - 1) % 12 + 1, 1).strftime('%B %Y'),
+                'Predicted sales in units': sales
+            } for m, sales in enumerate(predictions, start=1)]
+
+            df_forecast = pd.DataFrame(forecast_data)
+            fig = px.line(df_forecast, x='Date', y='Predicted sales in units', title='Forecast')
+            st.plotly_chart(fig)
+        else:
+            st.error("No data found for the given ASIN and Region.")
+    except ValueError as e:
+        st.error(str(e))
+    except Exception as e:
+        st.error("An error occurred during prediction: " + str(e))
+
+
+def analytics():
+    st.title("Data Analytics")
+    cases = {
+        "Monthly units sold per ASIN & region": UnitsSoldCase,
+        "Monthly units sold per category": UnitsSoldPerCategoryCase,
+        "% of net sales spent in ads per category": PercOfNetSalesSpentInAdCase,
+        "Average sale price per ASIN & region": AvgPricePerASINCase
+    }
+    case_choice = st.selectbox("Select analysis report", list(cases.keys()))
+    if case_choice:
+        if "sf_connection" in st.session_state:
+            case_class = cases[case_choice](connection=st.session_state["sf_connection"])
             case_class.render()
+        else:
+            st.error("Snowflake database connection not found.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

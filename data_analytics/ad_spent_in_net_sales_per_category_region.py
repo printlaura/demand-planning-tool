@@ -3,8 +3,9 @@ import streamlit as st
 
 
 class PercOfNetSalesSpentInAdCase(BaseAnalyticsCase):
-    def __init__(self):
-        super().__init__('data_analytics/queries/perc_of_sales_spent_in_ad_category.sql')
+    def __init__(self, connection):
+        super().__init__('data_analytics/queries/perc_of_sales_spent_in_ad_category.sql', connection)
+        self.connection = connection
 
     def render(self):
         st.title("% of Net Sales spent in advertisement per category")

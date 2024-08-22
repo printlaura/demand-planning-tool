@@ -1,19 +1,20 @@
 import snowflake.connector
 import logging
-from config import SNOWFLAKE_USER, SNOWFLAKE_PASSWORD, SNOWFLAKE_ACCOUNT, SNOWFLAKE_WAREHOUSE, SNOWFLAKE_DATABASE, SNOWFLAKE_SCHEMA
+from config import SNOWFLAKE_ACCOUNT, SNOWFLAKE_WAREHOUSE, SNOWFLAKE_DATABASE, SNOWFLAKE_SCHEMA
 
 
-def get_snowflake_connection():
+def get_snowflake_connection(user, password, account=SNOWFLAKE_ACCOUNT, warehouse=SNOWFLAKE_WAREHOUSE,
+                             database=SNOWFLAKE_DATABASE, schema=SNOWFLAKE_SCHEMA):
     logging.basicConfig(level=logging.INFO)
 
     try:
         conn = snowflake.connector.connect(
-            user=SNOWFLAKE_USER,
-            password=SNOWFLAKE_PASSWORD,
-            account=SNOWFLAKE_ACCOUNT,
-            warehouse=SNOWFLAKE_WAREHOUSE,
-            database=SNOWFLAKE_DATABASE,
-            schema=SNOWFLAKE_SCHEMA
+            user=user,
+            password=password,
+            account=account,
+            warehouse=warehouse,
+            database=database,
+            schema=schema
         )
         logging.info("Successfully connected to Snowflake.")
 
