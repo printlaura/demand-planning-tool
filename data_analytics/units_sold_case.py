@@ -19,4 +19,6 @@ class UnitsSoldCase(BaseAnalyticsCase):
 
         df = self.data_to_df(data, columns)
         st.dataframe(df)
+        st.sidebar.write("")
+        st.sidebar.write("")
         st.bar_chart(df.set_index("ASIN"))

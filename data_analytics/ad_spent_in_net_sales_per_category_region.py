@@ -19,4 +19,5 @@ class PercOfNetSalesSpentInAdCase(BaseAnalyticsCase):
         data, columns = self.run_query(query)
 
         df = self.data_to_df(data, columns)
+
         st.bar_chart(df, x="CATEGORY", y="% of net sales spent in ad")

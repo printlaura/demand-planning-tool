@@ -48,8 +48,6 @@ def user_login():
 
 
 def page_navigation():
-    #sidebar()
-
     current_page = st.session_state.get("current_page", "Home")
 
     if current_page == "Home":
@@ -68,11 +66,6 @@ def analytics_and_forecasting_sidebar():
         st.session_state["current_page"] = toggle_page
         st.rerun()
 
-    st.sidebar.write("")
-    st.sidebar.write("")
-    st.sidebar.write("")
-    st.sidebar.write("")
-    st.sidebar.write("")
     if st.sidebar.button("Log out"):
         logout()
 

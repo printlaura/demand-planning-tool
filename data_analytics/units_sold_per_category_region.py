@@ -17,4 +17,5 @@ class UnitsSoldPerCategoryCase(BaseAnalyticsCase):
 
         df = self.data_to_df(data, columns)
         st.dataframe(df)
+
         st.bar_chart(df.set_index("Region"))
