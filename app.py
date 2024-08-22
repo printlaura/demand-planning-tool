@@ -64,8 +64,6 @@ def sales_predictor():
     asin = st.text_input("Enter ASIN:", "")
     region_options = ["EU", "US", "CA", "UK", "AU", "JP", "MX"]
     region = st.selectbox("Select a region:", region_options)
-    month_today = datetime.now().month
-    year_today = datetime.now().year
 
     if st.button("Get Forecast"):
         if asin and region:
