@@ -27,6 +27,3 @@ class BaseAnalyticsCase:
             raise ValueError("No data or columns available to convert to DataFrame")
 
         return pd.DataFrame(data, columns=columns)
-
-    def __del__(self):
-        self.conn.close()
