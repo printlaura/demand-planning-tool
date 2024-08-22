@@ -4,7 +4,7 @@ import streamlit as st
 
 class UnitsSoldPerCategoryCase(BaseAnalyticsCase):
     def __init__(self, connection):
-        super().__init__('data_analytics/queries/units_sold_per_category_region.sql')
+        super().__init__('data_analytics/queries/units_sold_per_category_region.sql', connection)
         self.connection = connection
 
     def render(self):

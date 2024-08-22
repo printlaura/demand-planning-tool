@@ -4,7 +4,7 @@ import streamlit as st
 
 class AvgPricePerASINCase(BaseAnalyticsCase):
     def __init__(self, connection):
-        super().__init__('data_analytics/queries/avg_sale_price_asin_region.sql')
+        super().__init__('data_analytics/queries/avg_sale_price_asin_region.sql', connection)
         self.connection = connection
 
     def render(self):
