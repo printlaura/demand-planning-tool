@@ -17,4 +17,5 @@ class AvgPricePerASINCase(BaseAnalyticsCase):
         data, columns = self.run_query(query)
 
         df = self.data_to_df(data, columns)
+
         st.bar_chart(df, x="YEAR_MONTH", y="average sale price")
