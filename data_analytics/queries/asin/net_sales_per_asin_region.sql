@@ -6,7 +6,7 @@ select iff(month(date) > 9,
         ) as year_month,
         asin,
         region,
-        iff(sum(net_sales) < 0, 0, sum(net_sales)) as net_sales
+        iff(sum(net_sales) < 0, 0, sum(net_sales)) as "net sales in EUR"
 from STREAMLIT_POC.SANDBOX.ASIN_TRACKING_DETAILED_VIEW
 where asin = upper('{asin}')
     and region = upper('{region}')
