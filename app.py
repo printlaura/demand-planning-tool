@@ -10,6 +10,7 @@ from data_analytics.units_sold_case import UnitsSoldCase
 from data_analytics.units_sold_per_category_region import UnitsSoldPerCategoryCase
 from data_analytics.ad_spent_in_net_sales_per_category_region import PercOfNetSalesSpentInAdCase
 from data_analytics.avg_price_per_asin_region import AvgPricePerASINCase
+from data_analytics.empty_field_default import empty_field_by_default
 
 st.set_page_config(page_title="Demand Plan Tool", layout="wide")
 
@@ -149,18 +150,23 @@ def predictor(asin, region):
 def analytics():
     st.title("Data Analytics")
     cases = {
+        "select one option": "",
         "Monthly units sold per ASIN & region": UnitsSoldCase,
         "Monthly units sold per category": UnitsSoldPerCategoryCase,
         "% of net sales spent in ads per category": PercOfNetSalesSpentInAdCase,
         "Average sale price per ASIN & region": AvgPricePerASINCase
     }
-    case_choice = st.selectbox("Select analysis report", list(cases.keys()))
-    if case_choice:
+
+    case_choice = st.selectbox("Select analysis report", list(cases.keys()), index=0)
+
+    if case_choice != "select one option":
         if "sf_connection" in st.session_state:
             case_class = cases[case_choice](connection=st.session_state["sf_connection"])
             case_class.render()
         else:
             st.error("Snowflake database connection not found.")
+    else:
+        empty_field_by_default()
 
 
 if __name__ == "__main__":
