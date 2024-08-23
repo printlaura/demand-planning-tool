@@ -7,7 +7,6 @@ class SnowflakeQueryExecutor:
     def execute_query(query, conn):
         try:
             df = pd.read_sql(query, conn)
-            conn.close()
 
             print("Data successfully loaded.")
             return df
