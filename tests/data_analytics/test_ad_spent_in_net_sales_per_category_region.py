@@ -13,10 +13,13 @@ def ad_case():
 @patch('streamlit.selectbox')
 @patch('streamlit.title')
 @patch('streamlit.bar_chart')
-def test_render(mock_selectbox, mock_title, mock_bar_chart, ad_case):
-    mock_selectbox.side_effect = ["US", "2023", "01"]
+@patch('streamlit.error')
+def test_render_with_valid_selection(mock_error, mock_bar_chart, mock_title, mock_selectbox, ad_case):
     mock_title.return_value = None
     mock_bar_chart.return_value = None
+    mock_error.return_value = None
+
+    mock_selectbox.side_effect = ["US", "2023", "01"]
 
     data = [('Electronics', 20.0), ('Books', 15.5)]
     columns = ['CATEGORY', '% of net sales spent in ad']
@@ -30,44 +33,49 @@ def test_render(mock_selectbox, mock_title, mock_bar_chart, ad_case):
     ad_case.render()
 
     assert mock_selectbox.call_count == 3
+    assert mock_selectbox.call_args_list == [
+        (("Select a region:", ["select one option", "EU", "US", "CA", "UK", "AU", "JP", "MX"]), {'index': 0}),
+        (("Select a year:", ["select one option", "2023", "2024"]), {'index': 0}),
+        (("Select a month:",
+          ["select one option", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]), {'index': 0}),
+    ]
 
-    region, year, month = mock_selectbox.side_effect
-
+    region, year, month = ["US", "2023", "01"]
     year_month = year + month
-
     assert year_month == "202301"
 
     ad_case.load_sql_query.assert_called_once_with(region="US", year_month="202301")
-
     ad_case.run_query.assert_called_once_with('SELECT * FROM TABLE')
 
     mock_title.assert_called_once_with("% of Net Sales spent in advertisement per category")
-
-    mock_selectbox.assert_called_with("Select a month:",
-                                      ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"])
     mock_bar_chart.assert_called_once()
 
 
-def test_render_missing_selection(ad_case):
-    @patch('streamlit.selectbox')
-    @patch('streamlit.title')
-    @patch('streamlit.bar_chart')
-    @patch('streamlit.error')
-    def test_missing_year_or_month(mock_error, mock_bar_chart, mock_title, mock_selectbox, ad_case):
+@patch('streamlit.selectbox')
+@patch('streamlit.title')
+@patch('streamlit.error')
+def test_render_with_missing_selection(mock_error, mock_title, mock_selectbox, ad_case):
+    mock_title.return_value = None
+    mock_error.return_value = None
 
-        mock_selectbox.side_effect = ["US", None, "01"]
-        mock_title.return_value = None
-        mock_bar_chart.return_value = None
-        mock_error.return_value = None
+    # test missing year
+    mock_selectbox.side_effect = ["US", "select one option", "01"]
 
-        ad_case.render()
+    ad_case.render()
 
-        mock_error.assert_called_once_with("A region, a year and a month must be selected.")
-        mock_bar_chart.assert_not_called()
+    mock_error.assert_called_once_with("A region, a year and a month must be selected.")
+    mock_title.assert_called_once()
+    assert mock_selectbox.call_count == 3
 
-        mock_selectbox.side_effect = ["US", "2023", None]
+    mock_error.reset_mock()
+    mock_title.reset_mock()
+    mock_selectbox.reset_mock()
 
-        ad_case.render()
+    # test missing month
+    mock_selectbox.side_effect = ["US", "2023", "select one option"]
 
-        mock_error.assert_called_once_with("Both year and month must be selected.")
-        mock_bar_chart.assert_not_called()
+    ad_case.render()
+
+    mock_error.assert_called_once_with("A region, a year and a month must be selected.")
+    mock_title.assert_called_once()
+    assert mock_selectbox.call_count == 3
