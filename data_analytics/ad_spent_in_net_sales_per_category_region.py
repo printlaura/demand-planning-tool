@@ -13,6 +13,10 @@ class PercOfNetSalesSpentInAdCase(BaseAnalyticsCase):
         year = st.selectbox("Select a year:", ["2023", "2024"])
         month = st.selectbox("Select a month:",
                              ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"])
+
+        if not region or not year or not month:
+            st.error("A region, a year and a month must be selected.")
+
         year_month = year + month
 
         query = self.load_sql_query(region=region, year_month=year_month)
