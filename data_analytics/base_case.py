@@ -2,12 +2,18 @@ import pandas as pd
 
 
 class BaseAnalyticsCase:
-    def __init__(self, sql_file, conn):
-        self.sql_file = sql_file
+    def __init__(self, sql_files, conn):
+        if isinstance(sql_files, list):
+            self.sql_files = sql_files
+        else:
+            self.sql_files = [sql_files]
         self.conn = conn
 
-    def load_sql_query(self, **filters):
-        with open(self.sql_file, 'r') as file:
+    def load_sql_query(self, i, **filters):
+        if not (0 <= i < len(self.sql_files)):
+            raise IndexError("Index is out of range for SQL files list.")
+
+        with open(self.sql_files[i], 'r') as file:
             query = file.read()
 
         if filters:

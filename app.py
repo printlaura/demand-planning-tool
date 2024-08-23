@@ -11,6 +11,7 @@ from data_analytics.units_sold_per_category_region import UnitsSoldPerCategoryCa
 from data_analytics.ad_spent_in_net_sales_per_category_region import PercOfNetSalesSpentInAdCase
 from data_analytics.avg_price_per_asin_region import AvgPricePerASINCase
 from data_analytics.empty_field_default import empty_field_by_default
+from data_analytics.categories_region_report import CategoriesPerRegionCase
 
 st.set_page_config(page_title="Demand Plan Tool", layout="wide")
 
@@ -148,16 +149,21 @@ def predictor(asin, region):
 
 
 def analytics():
-    st.title("Data Analytics")
+    st.sidebar.title("Data Analytics")
+    st.sidebar.write("")
+    st.sidebar.write("")
+    st.sidebar.subheader("Select report")
+
     cases = {
         "select one option": "",
+        "categories analytics": CategoriesPerRegionCase,
         "Monthly units sold per ASIN & region": UnitsSoldCase,
         "Monthly units sold per category": UnitsSoldPerCategoryCase,
         "% of net sales spent in ads per category": PercOfNetSalesSpentInAdCase,
         "Average sale price per ASIN & region": AvgPricePerASINCase
     }
 
-    case_choice = st.selectbox("Select analysis report", list(cases.keys()), index=0)
+    case_choice = st.sidebar.selectbox("Click below to select an analytics report", list(cases.keys()), index=0)
 
     if case_choice != "select one option":
         if "sf_connection" in st.session_state:

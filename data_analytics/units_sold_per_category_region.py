@@ -9,13 +9,15 @@ class UnitsSoldPerCategoryCase(BaseAnalyticsCase):
 
     def render(self):
         st.title("Monthly units sold per category")
-        region = st.selectbox("Select a region:", ["select one option", "EU", "US", "CA", "UK", "AU", "JP", "MX"], index=0)
-        # date_range = st.date_input("Select Date Range", [start_date, end_date])
+
+        st.sidebar.write("")
+        st.sidebar.write("")
+
+        region = st.sidebar.selectbox("Select a region:", ["select one option", "EU", "US", "CA", "UK", "AU", "JP",
+                                                           "MX"], index=0)
 
         query = self.load_sql_query(region=region)
         data, columns = self.run_query(query)
 
         df = self.data_to_df(data, columns)
-        st.dataframe(df)
-
-        st.bar_chart(df.set_index("Region"))
+        st.bar_chart(df, x="CATEGORY", y="% of net sales spent in ad") #change axes

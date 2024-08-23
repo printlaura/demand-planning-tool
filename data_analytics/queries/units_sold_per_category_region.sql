@@ -8,7 +8,7 @@ category as
 )
 
 
-select year_month, category, region, sum(units_sold) as units_sold
+select year_month, category, region, sum(units_sold) as "units sold"
 from
 (
     select iff(month(report_date) > 9,

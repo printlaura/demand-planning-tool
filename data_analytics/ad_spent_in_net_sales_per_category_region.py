@@ -10,25 +10,28 @@ class PercOfNetSalesSpentInAdCase(BaseAnalyticsCase):
     def render(self):
         st.title("% of Net Sales spent in advertisement per category")
 
-        with st.form("Case form"):
-            region = st.selectbox("Select a region:", ["select one option", "EU", "US", "CA", "UK", "AU", "JP", "MX"],
-                                  index=0)
-            year = st.selectbox("Select a year:", ["select one option", "2023", "2024"], index=0)
-            month = st.selectbox("Select a month:",
-                                 ["select one option", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11",
-                                  "12"], index=0)
-            submitted = st.form_submit_button("see report")
+        st.sidebar.write("")
+        st.sidebar.write("")
 
-            if submitted:
-                if region == "select one option" or year == "select one option" or month == "select one option":
-                    st.error("A region, a year and a month must be selected.")
-                    return
+        region = st.sidebar.selectbox("Select a region:",
+                                      ["select one option", "EU", "US", "CA", "UK", "AU", "JP", "MX"],
+                                        index=0)
+        st.sidebar.write("")
+        st.sidebar.write("")
 
-                else:
-                    year_month = year + month
-                    query = self.load_sql_query(region=region, year_month=year_month)
-                    data, columns = self.run_query(query)
+        year = st.sidebar.selectbox("Select a year:", ["select one option", "2023", "2024"], index=0)
+        month = st.sidebar.selectbox("Select a month:", ["select one option", "01", "02", "03", "04", "05", "06", "07",
+                                                         "08", "09", "10","11", "12"], index=0)
 
-                    df = self.data_to_df(data, columns)
+        if region == "select one option" or year == "select one option" or month == "select one option":
+            st.error("A region, a year and a month must be selected.")
+            return
 
-                    st.bar_chart(df, x="CATEGORY", y="% of net sales spent in ad")
+        else:
+            year_month = year + month
+            query = self.load_sql_query(region=region, year_month=year_month)
+            data, columns = self.run_query(query)
+
+            df = self.data_to_df(data, columns)
+
+            st.bar_chart(df, x="CATEGORY", y="% of net sales spent in ad")
