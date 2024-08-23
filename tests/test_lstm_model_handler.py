@@ -14,8 +14,10 @@ def lstm_model_handler():
 
         with patch('pickle.load', return_value=Mock(name='scaler_mock')) as mock_scaler:
             scaler_mock = mock_scaler.return_value
-            scaler_mock.transform.return_value = np.array([[1.0]])
-            scaler_mock.inverse_transform.return_value = np.array([[1.0]])
+            scaler_mock.transform.side_effect = lambda x: x
+            scaler_mock.inverse_transform.side_effect = lambda x: x
+            #scaler_mock.transform.return_value = np.array([[1.0]])
+            #scaler_mock.inverse_transform.return_value = np.array([[1.0]])
 
             handler = LSTMModelHandler()
 
