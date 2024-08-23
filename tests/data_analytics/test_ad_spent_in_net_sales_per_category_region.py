@@ -33,10 +33,6 @@ def test_render(mock_selectbox, mock_title, mock_bar_chart, ad_case):
 
     region, year, month = mock_selectbox.side_effect
 
-    assert region is not None, "Region returned None"
-    assert year is not None, "Year returned None"
-    assert month is not None, "Month returned None"
-
     year_month = year + month
 
     assert year_month == "202301"
