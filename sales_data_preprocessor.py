@@ -30,7 +30,8 @@ class SalesDataPreprocessor:
         self._convert_data_types()
         self.df = pd.get_dummies(self.df, columns=['CATEGORY'])
         self.df = pd.get_dummies(self.df, columns=['MONTH'])
-        self.df = self.df.map(lambda x: 1 if x == True else (0 if x == False else x))
+        self.df = self.df.applymap(lambda x: 1 if x is True else (0 if x is False else x))
+
         self._add_dummy_columns()
 
         for column in self.df.columns:
