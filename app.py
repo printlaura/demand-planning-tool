@@ -89,6 +89,10 @@ def home():
 
 
 def logout():
+    if "sf_connection" in st.session_state:
+        st.session_state["sf_connection"].close()
+        print("Database connection closed.")
+
     for key in list(st.session_state.keys()):
         del st.session_state[key]
     st.rerun()
