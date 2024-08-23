@@ -21,10 +21,11 @@ def setup_snowflake_executor():
 @pytest.mark.parametrize("asin, region", [("B001234", "US"), ("B002345", "EU")])
 def test_load_data(setup_snowflake_executor, asin, region):
     query = f"SELECT * FROM sales WHERE ASIN='{asin}' AND REGION='{region}';"
+    conn = MagicMock()
 
     with patch("builtins.open", mock_open(read_data=query)):
         processor = SalesDataPreprocessor(setup_snowflake_executor, asin, region)
-        processor.load_data()
+        processor.load_data(conn)
 
         assert processor.df is not None, "Dataframe should not be None after loading data"
         assert not processor.df.empty, "Dataframe should not be empty after loading data"
