@@ -10,7 +10,7 @@ class UnitsSoldCase(BaseAnalyticsCase):
     def render(self):
         st.title("Monthly units sold per ASIN & region")
         asin = st.text_input("Enter ASIN:", "").upper()
-        region = st.selectbox("Select a region:", ["EU", "US", "CA", "UK", "AU", "JP", "MX"])
+        region = st.selectbox("Select a region:", ["select one option", "EU", "US", "CA", "UK", "AU", "JP", "MX"], index=0)
        # date_range = st.date_input("Select Date Range", [start_date, end_date])
         min_units_sold = st.slider("Minimum Units Sold", 0, 200, 100)
 
