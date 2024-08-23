@@ -43,7 +43,7 @@ class SalesDataPreprocessor:
 
     def _fill_missing_sale_price(self):
         # Fill null price values with the latest available ones
-        self.df['FILLED_SALE_PRICE'] = self.df.groupby(['DATE'])['SALE_PRICE'].ffill()
+        self.df['FILLED_SALE_PRICE'] = self.df['SALE_PRICE'].ffill()
         self.df['SALE_PRICE'] = self.df['FILLED_SALE_PRICE']
 
     def _convert_data_types(self):
