@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 import pandas as pd
 from unittest.mock import Mock, patch
-from ..lstm_model_handler import LSTMModelHandler
+from lstm_model_handler import LSTMModelHandler
 
 
 @pytest.fixture

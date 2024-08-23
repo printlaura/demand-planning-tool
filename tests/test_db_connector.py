@@ -1,7 +1,7 @@
 import pytest
 from unittest import mock
 import logging
-from ..db_connector import get_snowflake_connection
+from db_connector import get_snowflake_connection
 from snowflake.connector.errors import DatabaseError
 import sys
 
