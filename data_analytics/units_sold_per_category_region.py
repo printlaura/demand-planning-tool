@@ -9,7 +9,7 @@ class UnitsSoldPerCategoryCase(BaseAnalyticsCase):
 
     def render(self):
         st.title("Monthly units sold per category")
-        region = st.selectbox("Select a region:", ["EU", "US", "CA", "UK", "AU", "JP", "MX"])
+        region = st.selectbox("Select a region:", ["select one option", "EU", "US", "CA", "UK", "AU", "JP", "MX"], index=0)
         # date_range = st.date_input("Select Date Range", [start_date, end_date])
 
         query = self.load_sql_query(region=region)

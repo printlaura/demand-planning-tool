@@ -11,7 +11,7 @@ class AvgPricePerASINCase(BaseAnalyticsCase):
         st.title("Average price per ASIN")
 
         asin = st.text_input("Enter ASIN:", "").upper()
-        region = st.selectbox("Select a region:", ["EU", "US", "CA", "UK", "AU", "JP", "MX"])
+        region = st.selectbox("Select a region:", ["select one option", "EU", "US", "CA", "UK", "AU", "JP", "MX"], index=0)
 
         query = self.load_sql_query(asin=asin, region=region)
         data, columns = self.run_query(query)
