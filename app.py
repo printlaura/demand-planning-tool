@@ -7,11 +7,11 @@ from db_connector import get_snowflake_connection
 from sales_data_preprocessor import SalesDataPreprocessor
 from lstm_model_handler import LSTMModelHandler
 from data_analytics.units_sold_case import UnitsSoldCase
-from data_analytics.units_sold_per_category_region import UnitsSoldPerCategoryCase
-from data_analytics.ad_spent_in_net_sales_per_category_region import PercOfNetSalesSpentInAdCase
 from data_analytics.avg_price_per_asin_region import AvgPricePerASINCase
 from data_analytics.empty_field_default import empty_field_by_default
 from data_analytics.categories_region_report import CategoriesPerRegionCase
+from data_analytics.brands_region_report import BrandsPerRegionCase
+from data_analytics.asin_region_report import AsinRegionCase
 
 st.set_page_config(page_title="Demand Plan Tool", layout="wide")
 
@@ -157,9 +157,9 @@ def analytics():
     cases = {
         "select one option": "",
         "categories analytics": CategoriesPerRegionCase,
+        "brands analytics": BrandsPerRegionCase,
+        "ASIN analytics": AsinRegionCase,
         "Monthly units sold per ASIN & region": UnitsSoldCase,
-        "Monthly units sold per category": UnitsSoldPerCategoryCase,
-        "% of net sales spent in ads per category": PercOfNetSalesSpentInAdCase,
         "Average sale price per ASIN & region": AvgPricePerASINCase
     }
 

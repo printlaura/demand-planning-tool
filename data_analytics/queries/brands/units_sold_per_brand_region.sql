@@ -6,8 +6,7 @@ select iff(month(report_date) > 9,
         ) as year_month,
         brand,
         region,
-        iff(sum(units_sold) < 0, 0, sum(units_sold)) as units_sold
+        iff(sum(units_sold) < 0, 0, sum(units_sold)) as "units sold"
 from STREAMLIT_POC.SANDBOX.STOCK_PERFORMANCE_TEST_VIEW
-where brand = upper('{brand}')
-    and region = upper('{region}')
+where region = upper('{region}')
 group by brand, region, year_month

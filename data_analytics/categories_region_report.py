@@ -26,9 +26,9 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
                          conn=connection)
 
     def render(self):
-        st.title("Categories")
-
         region, year, month, year_month, month_name = filters_selection()
+
+        st.title(f"Categories - {region}")
 
         if region == "select one option" or year == "select one option" or month == "select one option":
             st.error("A region, a year and a month must be selected.")
@@ -36,13 +36,17 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
         else:
             st.subheader("% of Net Sales spent in advertisement")
             st.write(month_name, year)
+            st.write("")
+            st.write("")
+            st.write("")
             self.perc_of_sales_spent_in_ad(region, year_month)
             st.sidebar.write("")
             st.sidebar.write("")
             st.subheader("Units sold")
-            st.sidebar.write("")
             st.write(month_name, year)
-            st.sidebar.write("")
+            st.write("")
+            st.write("")
+            st.write("")
             self.units_sold(region, year_month)
 
     def perc_of_sales_spent_in_ad(self, region, year_month):
