@@ -2,13 +2,11 @@ import pandas as pd
 import streamlit as st
 from datetime import datetime
 import plotly.express as px
+
 from snowflake_query_executor import SnowflakeQueryExecutor
 from db_connector import get_snowflake_connection
 from sales_data_preprocessor import SalesDataPreprocessor
 from lstm_model_handler import LSTMModelHandler
-from data_analytics.units_sold_case import UnitsSoldCase
-from data_analytics.avg_price_per_asin_region import AvgPricePerASINCase
-from data_analytics.empty_field_default import empty_field_by_default
 from data_analytics.categories_region_report import CategoriesPerRegionCase
 from data_analytics.brands_region_report import BrandsPerRegionCase
 from data_analytics.asin_region_report import AsinRegionCase
@@ -159,8 +157,6 @@ def analytics():
         "categories analytics": CategoriesPerRegionCase,
         "brands analytics": BrandsPerRegionCase,
         "ASIN analytics": AsinRegionCase,
-        "Monthly units sold per ASIN & region": UnitsSoldCase,
-        "Average sale price per ASIN & region": AvgPricePerASINCase
     }
 
     case_choice = st.sidebar.selectbox("Click below to select an analytics report", list(cases.keys()), index=0)
@@ -172,7 +168,7 @@ def analytics():
         else:
             st.error("Snowflake database connection not found.")
     else:
-        empty_field_by_default()
+        return None
 
 
 if __name__ == "__main__":
