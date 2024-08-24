@@ -5,7 +5,7 @@ import streamlit as st
 def filters_selection():
     asin = st.sidebar.text_input("Enter ASIN:", "")
     region = st.sidebar.selectbox("Select a region:",
-                                  ["select one option", "EU", "US", "CA", "UK", "AU", "JP", "MX"], index=0)
+                                  ["select one option", "EU", "US", "UK", "JP"], index=0)
     year = st.sidebar.multiselect("Select one or more years:", options=["2023", "2024"])
 
     return asin, region, year

@@ -102,7 +102,7 @@ def sales_predictor():
     st.header("Sales Predictor")
 
     asin = st.text_input("Enter ASIN:", "")
-    region_options = ["EU", "US", "CA", "UK", "AU", "JP", "MX"]
+    region_options = ["EU", "US", "UK", "JP"]
     region = st.selectbox("Select a region:", region_options)
 
     if st.button("Get Forecast"):

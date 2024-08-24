@@ -6,7 +6,7 @@ from datetime import datetime
 
 def filters_selection():
     region = st.sidebar.selectbox("Select a region:",
-                                  ["select one option", "EU", "US", "CA", "UK", "AU", "JP", "MX"], index=0)
+                                  ["select one option", "EU", "US", "UK", "JP"], index=0)
     year = st.sidebar.selectbox("Select a year:", ["select one option", "2023", "2024"], index=0)
     month = st.sidebar.selectbox("Select a month:", ["select one option", "01", "02", "03", "04", "05", "06", "07",
                                                      "08", "09", "10", "11", "12"], index=0)
