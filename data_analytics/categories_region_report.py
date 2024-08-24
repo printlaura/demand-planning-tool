@@ -52,7 +52,7 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
             st.error("A region, a year and a month must be selected.")
             return
         else:
-            display_metric("Units sold", f"{month_name} - {year}", self.units_sold, region, year_month)
+            display_metric("Units sold", f"{month_name} {year}", self.units_sold, region, year_month)
             display_metric("% of Net Sales spent in advertisement", f"{month_name} - {year}",
                                 self.perc_of_sales_spent_in_ad, region, year_month)
 

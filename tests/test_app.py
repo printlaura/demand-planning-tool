@@ -73,7 +73,3 @@ def test_analytics_selection_valid():
             patch('app.UnitsSoldCase.render'), \
             patch.dict('app.st.session_state', {'sf_connection': MagicMock()}, clear=True):
         app.analytics()
-
-
-if __name__ == "__main__":
-    pytest.main()

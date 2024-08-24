@@ -22,7 +22,7 @@ class TestCategoriesPerRegionCase(unittest.TestCase):
 
         mock_title.assert_called_once_with("Categories - US")
         mock_subheader.assert_any_call("% of Net Sales spent in advertisement")
-        mock_write.assert_any_call("May", "2024")
+        mock_write.assert_any_call("May 2024")
         case.perc_of_sales_spent_in_ad.assert_called_once_with("US", "202405")
         mock_subheader.assert_any_call("Units sold")
         case.units_sold.assert_called_once_with("US", "202405")

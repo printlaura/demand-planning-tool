@@ -21,8 +21,8 @@ class TestBrandsPerRegionCase(unittest.TestCase):
         case.render()
 
         mock_title.assert_called_once_with("Brands - US")
-        mock_subheader.assert_any_call("Net Sales")
-        mock_write.assert_any_call("June", "2023")
+        mock_subheader.assert_any_call("Net sales")
+        mock_write.assert_any_call("June 2023")
         case.net_sales.assert_called_once_with('US', '202306')
         mock_subheader.assert_any_call("Units sold")
         case.units_sold.assert_called_once_with('US', '202306')
