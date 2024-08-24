@@ -10,4 +10,6 @@ select iff(month(date) > 9,
 from STREAMLIT_POC.SANDBOX.ASIN_TRACKING_DETAILED_VIEW
 where asin = upper('{asin}')
     and region = upper('{region}')
+    and year(date) > 2022
+    {year_filter} -- pass year condition dynamically from python input
 group by asin, region, year_month
