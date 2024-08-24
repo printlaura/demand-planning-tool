@@ -5,13 +5,13 @@ from datetime import datetime
 
 
 def filters_selection():
-    region = st.sidebar.selectbox("Select a region:",
-                                  ["select one option", "EU", "US", "UK", "JP"], index=0)
-    year = st.sidebar.selectbox("Select a year:", ["select one option", "2023", "2024"], index=0)
-    month = st.sidebar.selectbox("Select a month:", ["select one option", "01", "02", "03", "04", "05", "06", "07",
-                                                     "08", "09", "10", "11", "12"], index=0)
+    region = st.sidebar.selectbox("Select a region:", ["EU", "US", "UK", "JP"], index=None, key='region',
+                                  placeholder="...")
+    year = st.sidebar.selectbox("Select a year:", ["2023", "2024"], index=None, key='year', placeholder="...")
+    month = st.sidebar.selectbox("Select a month:", ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11",
+                                                     "12"], index=None, key='month', placeholder="...")
 
-    if month != "select one option":
+    if month:
         if int(year) == datetime.now().year and int(month) > datetime.now().month:
             st.write("The selected month is incorrect. Please select a previous date.")
             return []
@@ -32,11 +32,14 @@ class BrandsPerRegionCase(BaseAnalyticsCase):
                          conn=connection)
 
     def render(self):
-        region, year, month, year_month, month_name = filters_selection()
+        if not filters_selection():
+            return None
+        else:
+            region, year, month, year_month, month_name = filters_selection()
 
         st.title(f"Brands - {region}")
 
-        if region == "select one option" or year == "select one option" or month == "select one option":
+        if not region or not year or not month:
             st.error("A region, a year and a month must be selected.")
             return
         else:
