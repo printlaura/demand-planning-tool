@@ -1,6 +1,5 @@
 from data_analytics.base_case import BaseAnalyticsCase
 import streamlit as st
-import calendar
 
 
 def filters_selection():
