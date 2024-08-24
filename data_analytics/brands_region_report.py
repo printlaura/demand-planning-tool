@@ -22,6 +22,16 @@ def filters_selection():
         return None
 
 
+def display_metric(subheader, description, method, *method_args):
+    st.subheader(subheader)
+    st.write(description)
+    st.write("")
+    st.write("")
+    method(*method_args)
+    st.write("")
+    st.write("")
+
+
 class BrandsPerRegionCase(BaseAnalyticsCase):
     def __init__(self, connection):
         super().__init__(['data_analytics/queries/brands/net_sales_per_brand_region.sql',
@@ -43,20 +53,8 @@ class BrandsPerRegionCase(BaseAnalyticsCase):
             st.error("A region, a year and a month must be selected.")
             return
         else:
-            st.subheader("Net Sales")
-            st.write(month_name, year)
-            st.write("")
-            st.write("")
-            st.write("")
-            self.net_sales(region, year_month)
-            st.write("")
-            st.write("")
-            st.subheader("Units sold")
-            st.write(month_name, year)
-            st.write("")
-            st.write("")
-            st.write("")
-            self.units_sold(region, year_month)
+            display_metric("Units sold", f"{month_name} {year}", self.units_sold, region, year_month)
+            display_metric("Net sales", f"{month_name} {year}", self.net_sales, region, year_month)
 
     def net_sales(self, region, year_month):
         query = self.load_sql_query(0, region=region, year_month=year_month)

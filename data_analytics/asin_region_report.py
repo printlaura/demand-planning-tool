@@ -10,6 +10,16 @@ def filters_selection():
     return asin, region, year
 
 
+def display_metric(subheader, description, method, *method_args):
+    st.subheader(subheader)
+    st.write(description)
+    st.write("")
+    st.write("")
+    method(*method_args)
+    st.write("")
+    st.write("")
+
+
 class AsinRegionCase(BaseAnalyticsCase):
     def __init__(self, connection):
         super().__init__(['data_analytics/queries/asin/units_sold_per_asin_region.sql',
@@ -32,11 +42,11 @@ class AsinRegionCase(BaseAnalyticsCase):
             st.error("Please enter ASIN and region.")
             return
         else:
-            self.display_metric("Units sold", f"{asin} - {region}", self.units_sold, asin, region, year_filter)
-            self.display_metric("Net sales", f"{asin} - {region}", self.net_sales, asin, region, year_filter)
-            self.display_metric("Average sale price", f"{asin} - {region}", self.avg_sale_price, asin, region,
+            display_metric("Units sold", f"{asin} - {region}", self.units_sold, asin, region, year_filter)
+            display_metric("Net sales", f"{asin} - {region}", self.net_sales, asin, region, year_filter)
+            display_metric("Average sale price", f"{asin} - {region}", self.avg_sale_price, asin, region,
                                 year_filter)
-            self.display_metric("Out of Stock days", f"{asin} - {region}", self.oos_days, asin, region, year_filter)
+            display_metric("Out of Stock days", f"{asin} - {region}", self.oos_days, asin, region, year_filter)
 
     def units_sold(self, asin, region, year_filter):
         query = self.load_sql_query(0, asin=asin, region=region, year_filter=year_filter)
@@ -77,12 +87,3 @@ class AsinRegionCase(BaseAnalyticsCase):
             return
         df = self.data_to_df(data, columns)
         st.bar_chart(df, x="YEAR_MONTH", y="total Out of Stock days")
-
-    def display_metric(self, subheader, description, method, *method_args):
-        st.subheader(subheader)
-        st.write(description)
-        st.write("")
-        st.write("")
-        method(*method_args)
-        st.write("")
-        st.write("")

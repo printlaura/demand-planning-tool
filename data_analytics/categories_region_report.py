@@ -21,6 +21,17 @@ def filters_selection():
     else:
         return None
 
+
+def display_metric(subheader, description, method, *method_args):
+    st.subheader(subheader)
+    st.write(description)
+    st.write("")
+    st.write("")
+    method(*method_args)
+    st.write("")
+    st.write("")
+
+
 class CategoriesPerRegionCase(BaseAnalyticsCase):
     def __init__(self, connection):
         super().__init__(['data_analytics/queries/categories/perc_of_sales_spent_in_ad_category.sql',
@@ -41,20 +52,9 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
             st.error("A region, a year and a month must be selected.")
             return
         else:
-            st.subheader("% of Net Sales spent in advertisement")
-            st.write(month_name, year)
-            st.write("")
-            st.write("")
-            st.write("")
-            self.perc_of_sales_spent_in_ad(region, year_month)
-            st.sidebar.write("")
-            st.sidebar.write("")
-            st.subheader("Units sold")
-            st.write(month_name, year)
-            st.write("")
-            st.write("")
-            st.write("")
-            self.units_sold(region, year_month)
+            display_metric("Units sold", f"{month_name} - {year}", self.units_sold, region, year_month)
+            display_metric("% of Net Sales spent in advertisement", f"{month_name} - {year}",
+                                self.perc_of_sales_spent_in_ad, region, year_month)
 
     def perc_of_sales_spent_in_ad(self, region, year_month):
         query = self.load_sql_query(0, region=region, year_month=year_month)
@@ -67,3 +67,4 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
         data, columns = self.run_query(query)
         df = self.data_to_df(data, columns)
         st.bar_chart(df, x="CATEGORY", y="units sold")
+
