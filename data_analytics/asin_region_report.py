@@ -10,12 +10,22 @@ def filters_selection():
     return asin, region, year
 
 
-def display_metric(subheader, description, method, *method_args):
+def display_metric(subheader, description, data, viz_type, x_axis, y_axis):
     st.subheader(subheader)
     st.write(description)
     st.write("")
     st.write("")
-    method(*method_args)
+
+    if data is not None and subheader == "Out of Stock days" and data["total Out of Stock days"].sum() == 0:
+        st.write("This item has never been Out of Stock.")
+        return None
+
+    if data is not None:
+        if viz_type == 'bar':
+            st.bar_chart(data, x=x_axis, y=y_axis)
+    else:
+        st.write(f"No {subheader} data available for {description}.")
+
     st.write("")
     st.write("")
 
@@ -41,52 +51,50 @@ class AsinRegionCase(BaseAnalyticsCase):
         if not asin or not region:
             st.error("Please enter ASIN and region.")
             return
-        else:
-            display_metric("Units sold", f"{asin} - {region}", self.units_sold, asin, region, year_filter)
-            display_metric("Net sales", f"{asin} - {region}", self.net_sales, asin, region, year_filter)
-            display_metric("Average sale price", f"{asin} - {region}", self.avg_sale_price, asin, region,
-                                year_filter)
-            display_metric("Out of Stock days", f"{asin} - {region}", self.oos_days, asin, region, year_filter)
+
+        with st.spinner("Loading data..."):
+            units_sold_data = self.units_sold(asin, region, year_filter)
+            net_sales_data = self.net_sales(asin, region, year_filter)
+            avg_sale_price_data = self.avg_sale_price(asin, region, year_filter)
+            oos_days_data = self.oos_days(asin, region, year_filter)
+
+            st.empty()
+
+            display_metric("Units sold", f"{asin} - {region}", units_sold_data, "bar", "YEAR_MONTH", "units sold")
+            display_metric("Net sales", f"{asin} - {region}", net_sales_data, "bar", "YEAR_MONTH", "net sales in EUR")
+            display_metric("Average sale price", f"{asin} - {region}", avg_sale_price_data, "bar", "YEAR_MONTH",
+                           "average sale price")
+            display_metric("Out of Stock days", f"{asin} - {region}", oos_days_data, "bar", "YEAR_MONTH",
+                           "total Out of Stock days")
 
     def units_sold(self, asin, region, year_filter):
         query = self.load_sql_query(0, asin=asin, region=region, year_filter=year_filter)
         data, columns = self.run_query(query)
         if not data or not columns:
-            st.write("No units sold data available for this ASIN and region.")
-            return
+            return None
 
-        df = self.data_to_df(data, columns)
-        st.bar_chart(df, x="YEAR_MONTH", y="units sold")
+        return self.data_to_df(data, columns)
 
     def net_sales(self, asin, region, year_filter):
         query = self.load_sql_query(1, asin=asin, region=region, year_filter=year_filter)
         data, columns = self.run_query(query)
         if not data or not columns:
-            st.write("No sales data available for this ASIN and region.")
-            return
-        df = self.data_to_df(data, columns)
-        st.bar_chart(df, x="YEAR_MONTH", y="net sales in EUR")
+            return None
+
+        return self.data_to_df(data, columns)
 
     def avg_sale_price(self, asin, region, year_filter):
         query = self.load_sql_query(2, asin=asin, region=region, year_filter=year_filter)
         data, columns = self.run_query(query)
         if not data or not columns:
-            st.write("No price data available for this ASIN and region.")
-            return
-        df = self.data_to_df(data, columns)
-        if df["average sale price"].isnull().any():
-            st.write("No sale price available for this item.")
-        else:
-            st.bar_chart(df, x="YEAR_MONTH", y="average sale price")
+            return None
+
+        return self.data_to_df(data, columns)
 
     def oos_days(self, asin, region, year_filter):
         query = self.load_sql_query(3, asin=asin, region=region, year_filter=year_filter)
         data, columns = self.run_query(query)
         if not data or not columns:
-            st.write("No OOS data available for this ASIN and region.")
-            return
-        df = self.data_to_df(data, columns)
-        if df["total Out of Stock days"].sum() == 0:
-            st.write("This item has never been Out of Stock.")
-        else:
-            st.bar_chart(df, x="YEAR_MONTH", y="total Out of Stock days")
+            return None
+
+        return self.data_to_df(data, columns)
