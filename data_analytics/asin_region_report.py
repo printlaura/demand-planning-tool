@@ -7,7 +7,10 @@ def filters_selection():
     region = st.sidebar.selectbox("Select a region:", ["EU", "US", "UK", "JP"], index=None, placeholder="...")
     year = st.sidebar.multiselect("Select year(s):", ["2023", "2024"], default=[])
 
-    return asin, region, year
+    if asin and region:
+        return asin, region, year
+    else:
+        return None, None, None
 
 
 def display_metric(subheader, description, data, viz_type, x_axis, y_axis):
@@ -40,17 +43,19 @@ class AsinRegionCase(BaseAnalyticsCase):
                          conn=connection)
 
     def render(self):
-        st.title("ASIN")
 
         asin, region, year = filters_selection()
+
+        if st.sidebar.button("submit"):
+            if not asin or not region:
+                st.error("Please enter ASIN and region.")
+                return
+
+        st.title("ASIN")
 
         year_filter = ""
         if year:
             year_filter = f"and year(date) in ({', '.join(map(str, year))})"
-
-        if not asin or not region:
-            st.error("Please enter ASIN and region.")
-            return
 
         with st.spinner("Loading data..."):
             units_sold_data = self.units_sold(asin, region, year_filter)
