@@ -11,7 +11,7 @@ def filters_selection():
                                                      "12"], index=None, placeholder="...")
     if month:
         if int(year) == datetime.now().year and int(month) > datetime.now().month:
-            st.write("The selected month is incorrect. Please select a previous date.")
+            st.write("The selected month is invalid. Please select a previous date.")
             return None
         else:
             month_name = calendar.month_name[int(month)]
