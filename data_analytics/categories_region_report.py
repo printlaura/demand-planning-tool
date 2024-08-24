@@ -11,19 +11,17 @@ def filters_selection():
     month = st.sidebar.selectbox("Select a month:", ["select one option", "01", "02", "03", "04", "05", "06", "07",
                                                      "08", "09", "10", "11", "12"], index=0)
 
-    if int(year) == datetime.now().year and int(month) > datetime.now().month:
-        st.write("The selected month is incorrect. Please select a previous date.")
-        return None
-    else:
-        year_month = year + month
-
-        if month == "select one option":
-            month_name = None
+    if month != "select one option":
+        if int(year) == datetime.now().year and int(month) > datetime.now().month:
+            st.write("The selected month is incorrect. Please select a previous date.")
+            return []
         else:
             month_name = calendar.month_name[int(month)]
+            year_month = year + month
 
         return region, year, month, year_month, month_name
-
+    else:
+        return []
 
 class CategoriesPerRegionCase(BaseAnalyticsCase):
     def __init__(self, connection):

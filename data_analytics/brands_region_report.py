@@ -1,6 +1,7 @@
 from data_analytics.base_case import BaseAnalyticsCase
 import streamlit as st
 import calendar
+from datetime import datetime
 
 
 def filters_selection():
@@ -9,14 +10,18 @@ def filters_selection():
     year = st.sidebar.selectbox("Select a year:", ["select one option", "2023", "2024"], index=0)
     month = st.sidebar.selectbox("Select a month:", ["select one option", "01", "02", "03", "04", "05", "06", "07",
                                                      "08", "09", "10", "11", "12"], index=0)
-    year_month = year + month
 
-    if month == "select one option":
-        month_name = None
+    if month != "select one option":
+        if int(year) == datetime.now().year and int(month) > datetime.now().month:
+            st.write("The selected month is incorrect. Please select a previous date.")
+            return []
+        else:
+            month_name = calendar.month_name[int(month)]
+            year_month = year + month
+
+        return region, year, month, year_month, month_name
     else:
-        month_name = calendar.month_name[int(month)]
-
-    return region, year, month, year_month, month_name
+        return []
 
 
 class BrandsPerRegionCase(BaseAnalyticsCase):
