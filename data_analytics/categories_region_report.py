@@ -53,7 +53,7 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
             return
         else:
             display_metric("Units sold", f"{month_name} {year}", self.units_sold, region, year_month)
-            display_metric("% of Net Sales spent in advertisement", f"{month_name} - {year}",
+            display_metric("% of Net Sales spent in advertisement", f"{month_name} {year}",
                                 self.perc_of_sales_spent_in_ad, region, year_month)
 
     def perc_of_sales_spent_in_ad(self, region, year_month):

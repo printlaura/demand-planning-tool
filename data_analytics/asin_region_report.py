@@ -86,4 +86,7 @@ class AsinRegionCase(BaseAnalyticsCase):
             st.write("No OOS data available for this ASIN and region.")
             return
         df = self.data_to_df(data, columns)
-        st.bar_chart(df, x="YEAR_MONTH", y="total Out of Stock days")
+        if df["total Out of Stock days"].sum() == 0:
+            st.write("This item has never been Out of Stock.")
+        else:
+            st.bar_chart(df, x="YEAR_MONTH", y="total Out of Stock days")
