@@ -8,12 +8,12 @@ category as
 )
 
 
-select year_month, category, region, sum(units_sold) as units_sold
+select year_month, category, region, sum(units_sold) as "units sold"
 from
 (
-    select iff(month(report_date) > 9,
-                cast(year(report_date) as varchar) || cast(month(report_date) as varchar),
-                cast(year(report_date) as varchar) || '0' || cast(month(report_date) as varchar)
+    select iff(month(date) > 9,
+                cast(year(date) as varchar) || cast(month(date) as varchar),
+                cast(year(date) as varchar) || '0' || cast(month(date) as varchar)
             ) as year_month,
             region,
             a.asin,
@@ -23,5 +23,6 @@ from
     left join category b
     on a.asin = b.asin
     where region = upper('{region}')
+        and year(date) > 2022
 )
 group by year_month, category, region
