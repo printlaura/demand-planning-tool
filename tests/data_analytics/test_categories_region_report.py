@@ -11,7 +11,8 @@ class TestCategoriesPerRegionCase(unittest.TestCase):
     @patch('streamlit.subheader')
     @patch('streamlit.write')
     @patch('streamlit.bar_chart')
-    def test_render_with_valid_filters(self, mock_bar_chart, mock_write, mock_subheader, mock_title, mock_button, mock_filters_selection):
+    def test_render_with_valid_filters(self, mock_bar_chart, mock_write, mock_subheader, mock_title, mock_button,
+                                       mock_filters_selection):
 
         mock_connection = MagicMock()
         case = CategoriesPerRegionCase(mock_connection)
