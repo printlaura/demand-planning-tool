@@ -46,31 +46,31 @@ class AsinRegionCase(BaseAnalyticsCase):
 
         asin, region, year = filters_selection()
 
-        if st.sidebar.button("submit"):
+        if st.sidebar.button("see report"):
             if not asin or not region:
                 st.error("Please enter ASIN and region.")
                 return
 
-        st.title("ASIN")
+            st.title("ASIN")
 
-        year_filter = ""
-        if year:
-            year_filter = f"and year(date) in ({', '.join(map(str, year))})"
+            year_filter = ""
+            if year:
+                year_filter = f"and year(date) in ({', '.join(map(str, year))})"
 
-        with st.spinner("Loading data..."):
-            units_sold_data = self.units_sold(asin, region, year_filter)
-            net_sales_data = self.net_sales(asin, region, year_filter)
-            avg_sale_price_data = self.avg_sale_price(asin, region, year_filter)
-            oos_days_data = self.oos_days(asin, region, year_filter)
+            with st.spinner("Loading data..."):
+                units_sold_data = self.units_sold(asin, region, year_filter)
+                net_sales_data = self.net_sales(asin, region, year_filter)
+                avg_sale_price_data = self.avg_sale_price(asin, region, year_filter)
+                oos_days_data = self.oos_days(asin, region, year_filter)
 
-            st.empty()
+                st.empty()
 
-            display_metric("Units sold", f"{asin} - {region}", units_sold_data, "bar", "YEAR_MONTH", "units sold")
-            display_metric("Net sales", f"{asin} - {region}", net_sales_data, "bar", "YEAR_MONTH", "net sales in EUR")
-            display_metric("Average sale price", f"{asin} - {region}", avg_sale_price_data, "bar", "YEAR_MONTH",
-                           "average sale price")
-            display_metric("Out of Stock days", f"{asin} - {region}", oos_days_data, "bar", "YEAR_MONTH",
-                           "total Out of Stock days")
+                display_metric("Units sold", f"{asin} - {region}", units_sold_data, "bar", "YEAR_MONTH", "units sold")
+                display_metric("Net sales", f"{asin} - {region}", net_sales_data, "bar", "YEAR_MONTH", "net sales in EUR")
+                display_metric("Average sale price", f"{asin} - {region}", avg_sale_price_data, "bar", "YEAR_MONTH",
+                               "average sale price")
+                display_metric("Out of Stock days", f"{asin} - {region}", oos_days_data, "bar", "YEAR_MONTH",
+                               "total Out of Stock days")
 
     def units_sold(self, asin, region, year_filter):
         query = self.load_sql_query(0, asin=asin, region=region, year_filter=year_filter)
