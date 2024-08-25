@@ -11,7 +11,7 @@ oos_data as
             region,
             iff(is_out_of_stock = 'Y', 1, 0) as oos
     from STREAMLIT_POC.SANDBOX.STOCK_PERFORMANCE_TEST_VIEW
-    where asin = upper('{asin}')
+    where asin = upper(:asin)
     and year(date) > 2022
     {year_filter} -- pass year condition dynamically from python input
 )
