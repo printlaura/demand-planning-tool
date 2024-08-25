@@ -13,7 +13,6 @@ oos_data as
     from STREAMLIT_POC.SANDBOX.STOCK_PERFORMANCE_TEST_VIEW
     where asin = '{asin}'
       and region = '{region}'
-    and year(date) > 2022
     {year_filter} -- pass year condition dynamically from python input
 )
 

@@ -11,7 +11,6 @@ from
         region,
         iff(sum(units_sold) < 0, 0, sum(units_sold)) as "units sold"
     from STREAMLIT_POC.SANDBOX.STOCK_PERFORMANCE_TEST_VIEW
-    where year(date) > 2022
     group by brand, region, year_month
 )
 where region =  '{region}'
