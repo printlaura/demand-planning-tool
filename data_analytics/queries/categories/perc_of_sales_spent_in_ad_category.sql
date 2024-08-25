@@ -21,7 +21,6 @@ net_sales as
                 sum(net_sales) as net_sales,
                 sum(ad_spend) as ad_spend
         from STREAMLIT_POC.SANDBOX.ASIN_TRACKING_DETAILED_VIEW
-        where year(date) > 2022
         group by asin, region, year_month
     ) a
     left join category b

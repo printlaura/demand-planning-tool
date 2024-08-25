@@ -2,6 +2,7 @@ from data_analytics.base_case import BaseAnalyticsCase
 import streamlit as st
 import calendar
 from datetime import datetime
+import plotly.express as px
 
 
 def filters_selection():
@@ -24,6 +25,14 @@ def display_metric(subheader, description, data, viz_type, x_axis, y_axis):
     if data is not None:
         if viz_type == 'bar':
             st.bar_chart(data, x=x_axis, y=y_axis)
+
+        if viz_type == "pie":
+            fig = px.pie(data, names=x_axis, values=y_axis)
+            fig.update_layout(width=800, height=600, legend=dict(font=dict(size=14)))
+            st.write("Click or unclick brand names to filter out brands.")
+            st.plotly_chart(fig)
+            st.write("")
+            st.write("")
     else:
         st.write(f"No {subheader} data available for {description}.")
 
@@ -62,7 +71,7 @@ class BrandsPerRegionCase(BaseAnalyticsCase):
                 st.empty()
 
                 display_metric("Units sold", f"{month_name} {year}", units_sold_data, "bar", "BRAND", "units sold")
-                display_metric("Net sales", f"{month_name} {year}", net_sales_data, "bar", "BRAND",
+                display_metric("Net sales", f"{month_name} {year}", net_sales_data, "pie", "BRAND",
                                "net sales in EUR")
 
     def units_sold(self, region, year_month):
