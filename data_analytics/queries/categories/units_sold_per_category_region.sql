@@ -23,6 +23,5 @@ from
     left join category b
     on a.asin = b.asin
     where region =  '{region}'
-        and year(date) > 2022
 )
 group by year_month, category, region
