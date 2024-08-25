@@ -143,7 +143,7 @@ def predictor(asin, region):
             fig = px.line(df_forecast, x='Date', y='Predicted sales in units', title='Forecast')
             st.plotly_chart(fig)
         else:
-            st.error("No data found for the given ASIN and Region.")
+            st.error("No data found for the given ASIN and region.")
     except ValueError as e:
         st.error(str(e))
     except Exception as e:
@@ -163,7 +163,7 @@ def analytics():
         "ASIN analytics": AsinRegionCase,
     }
 
-    case_choice = st.sidebar.selectbox("Click below to select an analytics report", list(cases.keys()), index=0)
+    case_choice = st.sidebar.selectbox("Click below to select a report", list(cases.keys()), index=0)
 
     if case_choice != "select one option":
         if "sf_connection" in st.session_state:

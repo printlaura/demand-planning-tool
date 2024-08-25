@@ -54,7 +54,7 @@ class LSTMModelHandler:
         sequence = self.process_input(df)
         predictions = []
 
-        if not sequence:
+        if sequence is None:
             return "Failed to predict. There is no sale price historical data for this ASIN and region."
 
         for i in range(6):
