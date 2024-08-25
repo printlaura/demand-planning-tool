@@ -138,16 +138,24 @@ def predictor(asin, region):
             } for m, sales in enumerate(predictions, start=1)]
 
             df_forecast = pd.DataFrame(forecast_data)
+            render_predictions(df_forecast)
 
-            st.write(df_forecast.to_html(index=False), unsafe_allow_html=True)
-            fig = px.line(df_forecast, x='Date', y='Predicted sales in units', title='Forecast')
-            st.plotly_chart(fig)
         else:
             st.error("No data found for the given ASIN and region.")
     except ValueError as e:
         st.error(str(e))
     except Exception as e:
         st.error("An error occurred during prediction: " + str(e))
+
+def render_predictions(df):
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write(df.to_html(index=False), unsafe_allow_html=True)
+    st.write("")
+    fig = px.line(df, x='Date', y='Predicted sales in units', title='Forecast')
+    st.plotly_chart(fig)
+
 
 
 def analytics():
