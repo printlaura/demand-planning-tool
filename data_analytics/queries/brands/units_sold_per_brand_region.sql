@@ -14,4 +14,4 @@ from
     where year(date) > 2022
     group by brand, region, year_month
 )
-where region = upper(:region)
+where region =  '{region}'

@@ -8,8 +8,8 @@ select iff(month(date) > 9,
         asin,
         iff(sum(units_sold) < 0, 0, sum(units_sold)) as "units sold"
 from STREAMLIT_POC.SANDBOX.STOCK_PERFORMANCE_TEST_VIEW
-where asin = upper(:asin)
-    and region = upper(:region)
+where asin = '{asin}'
+    and region = '{region}'
     and year(date) > 2022
     {year_filter} -- pass year condition dynamically from python input
 group by asin, region, year_month

@@ -11,8 +11,8 @@ from
 (
     select asin, date, region, sale_price
     from STREAMLIT_POC.SANDBOX.ASIN_TRACKING_DETAILED_VIEW
-    where asin = upper(:asin)
-        and region = upper(:region)
+    where asin = '{asin}'
+        and region = '{region}'
         and year(date) > 2022
         {year_filter} -- pass year condition dynamically from python input
 )

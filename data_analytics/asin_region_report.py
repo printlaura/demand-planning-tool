@@ -4,7 +4,7 @@ from data_analytics.base_case import BaseAnalyticsCase
 
 
 def filters_selection():
-    asin = st.sidebar.text_input("Enter ASIN:", "")
+    asin = st.sidebar.text_input("Enter ASIN:", "").strip().upper()
     region = st.sidebar.selectbox("Select a region:", ["EU", "US", "UK", "JP"], index=None, placeholder="...")
     year = st.sidebar.multiselect("Select year(s):", ["2023", "2024"], default=[])
 
@@ -52,11 +52,12 @@ class AsinRegionCase(BaseAnalyticsCase):
 
         if st.sidebar.button("see report"):
             if not asin or not region:
-                st.error("Please enter ASIN and region.")
+                st.sidebar.error("Please enter ASIN and region.")
                 return
 
             if not validate_asin(asin):
-                st.error("The ASIN must contain between 8 and 12 alphanumeric characters.")
+                st.sidebar.error("Invalid ASIN.")
+                return None
 
             st.title("ASIN")
 
@@ -93,11 +94,7 @@ class AsinRegionCase(BaseAnalyticsCase):
         return self.query_data(3, asin, region, year_filter)
 
     def query_data(self, query_index, asin, region, year_filter):
-        query = self.load_sql_query(query_index)
-        c = self.conn.cursor()
-        parameters = {'asin': asin, 'region': region, 'year_filter': year_filter}
-        query = query.format(**parameters)
-        c.execute(query, parameters)
+        query = self.load_sql_query(query_index, asin=asin, region=region, year_filter=year_filter)
         data, columns = self.run_query(query)
         if not data or not columns:
             return None
