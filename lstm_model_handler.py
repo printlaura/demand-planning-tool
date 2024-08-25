@@ -1,4 +1,5 @@
 import numpy as np
+import math
 from tensorflow.keras.models import load_model
 from tensorflow.keras.utils import register_keras_serializable
 from tensorflow.keras.layers import LSTM
@@ -45,11 +46,17 @@ class LSTMModelHandler:
         # create a sequence for prediction
         sequence = sequence.reshape((1, self.n_past, df.shape[1]))
 
+        if df['PRICE'].isnull().any():
+            return None
+
         return sequence
 
-    def predict(self, sequence):
-        sequence = self.process_input(sequence)
+    def predict(self, df):
+        sequence = self.process_input(df)
         predictions = []
+
+        if sequence is None:
+            return "Failed to predict. There is no sale price historical data for this ASIN and region."
 
         for i in range(6):
             model = self.models[i]
@@ -57,4 +64,4 @@ class LSTMModelHandler:
             prediction = self.scalers_units_sold[i].inverse_transform(prediction)
             predictions.append(prediction[0][0])
 
-        return predictions
+        return map(math.ceil, predictions)

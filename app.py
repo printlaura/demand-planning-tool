@@ -102,12 +102,11 @@ def sales_predictor():
     st.header("Sales Predictor")
 
     asin = st.text_input("Enter ASIN:", "")
-    region_options = ["EU", "US", "UK", "JP"]
-    region = st.selectbox("Select a region:", region_options)
+    region = st.selectbox("Select a region:", ["EU", "US", "UK", "JP"], index=None, placeholder="...")
 
     if st.button("Get Forecast"):
         if not asin or not region:
-            st.error("Please enter an ASIN and region")
+            st.error("Please enter ASIN and region")
         else:
             predictor(asin, region)
 
@@ -127,6 +126,11 @@ def predictor(asin, region):
         if not df_preprocessed.empty:
             model_handler = LSTMModelHandler()
             predictions = model_handler.predict(df_preprocessed)
+
+            if predictions == "Failed to predict. There is no sale price historical data for this ASIN and region.":
+                st.write(predictions)
+                return None
+
             forecast_data = [{
                 'Date': datetime(year_today + (month_today + m - 1) // 12,
                                  (month_today + m - 1) % 12 + 1, 1).strftime('%B %Y'),
@@ -134,16 +138,24 @@ def predictor(asin, region):
             } for m, sales in enumerate(predictions, start=1)]
 
             df_forecast = pd.DataFrame(forecast_data)
+            render_predictions(df_forecast)
 
-            st.write(df_forecast.to_html(index=False), unsafe_allow_html=True)
-            fig = px.line(df_forecast, x='Date', y='Predicted sales in units', title='Forecast')
-            st.plotly_chart(fig)
         else:
-            st.error("No data found for the given ASIN and Region.")
+            st.error("No data found for the given ASIN and region.")
     except ValueError as e:
         st.error(str(e))
     except Exception as e:
         st.error("An error occurred during prediction: " + str(e))
+
+def render_predictions(df):
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write(df.to_html(index=False), unsafe_allow_html=True)
+    st.write("")
+    fig = px.line(df, x='Date', y='Predicted sales in units', title='Forecast')
+    st.plotly_chart(fig)
+
 
 
 def analytics():
@@ -159,7 +171,7 @@ def analytics():
         "ASIN analytics": AsinRegionCase,
     }
 
-    case_choice = st.sidebar.selectbox("Click below to select an analytics report", list(cases.keys()), index=0)
+    case_choice = st.sidebar.selectbox("Click below to select a report", list(cases.keys()), index=0)
 
     if case_choice != "select one option":
         if "sf_connection" in st.session_state:
