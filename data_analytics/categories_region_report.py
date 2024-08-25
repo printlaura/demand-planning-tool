@@ -19,28 +19,30 @@ def filters_selection():
 def display_metric(subheader, description, data, viz_type, x_axis, y_axis):
     st.subheader(subheader)
     st.write(description)
-    st.write("")
-    st.write("")
 
     if data is not None:
         if viz_type == "bar":
-            st.bar_chart(data, x=x_axis, y=y_axis)
+            fig = px.bar(data, x=x_axis, y=y_axis, color=x_axis)
+            fig.update_layout(showlegend=False, xaxis_title="", yaxis_title='% of net sales')
+            st.plotly_chart(fig)
+            st.write("")
+            st.write("")
+
         if viz_type == "pie":
             fig = px.pie(data, names=x_axis, values=y_axis)
             fig.update_layout(width=800, height=600, legend=dict(font=dict(size=14)))
             st.write("Click or unclick Category names to display specific values.")
             st.plotly_chart(fig)
+            st.write("")
+            st.write("")
     else:
         st.write(f"No {subheader} data available for {description}.")
-
-    st.write("")
-    st.write("")
 
 
 class CategoriesPerRegionCase(BaseAnalyticsCase):
     def __init__(self, connection):
         super().__init__(['data_analytics/queries/categories/units_sold_per_category_region.sql',
-                         'data_analytics/queries/categories/perc_of_sales_spent_in_ad_category.sql'],
+                          'data_analytics/queries/categories/perc_of_sales_spent_in_ad_category.sql'],
                          conn=connection)
 
     def render(self):
@@ -59,6 +61,8 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
             year_month = year + month
 
             st.title(f"Categories - {region}")
+            st.write("")
+            st.write("")
 
             with st.spinner("Loading data..."):
                 units_sold_data = self.units_sold(region, year_month)
