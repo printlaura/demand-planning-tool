@@ -3,35 +3,6 @@ import streamlit as st
 import calendar
 from datetime import datetime
 
-""""
-def filters_selection():
-    region = st.sidebar.selectbox("Select a region:", ["EU", "US", "UK", "JP"], index=None, placeholder="...")
-    year = st.sidebar.selectbox("Select a year:", ["2023", "2024"], index=None, placeholder="...")
-    month = st.sidebar.selectbox("Select a month:", ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11",
-                                                     "12"], index=None, placeholder="...")
-    if month and year:
-        if int(year) == datetime.now().year and int(month) > datetime.now().month:
-            st.write("The selected month is invalid. Please select a previous date.")
-            return None
-        else:
-            month_name = calendar.month_name[int(month)]
-            year_month = year + month
-
-        return region, year, month, year_month, month_name
-    else:
-        return None
-
-
-def display_metric(subheader, description, method, *method_args):
-    st.subheader(subheader)
-    st.write(description)
-    st.write("")
-    st.write("")
-    method(*method_args)
-    st.write("")
-    st.write("")
-"""
-
 
 def filters_selection():
     region = st.sidebar.selectbox("Select a region:", ["EU", "US", "UK", "JP"], index=None, placeholder="...")
