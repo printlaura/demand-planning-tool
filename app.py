@@ -107,7 +107,9 @@ def sales_predictor():
     if st.button("Get Forecast"):
         if not asin or not region:
             st.error("Please enter ASIN and region")
-        else:
+            return
+
+        with st.spinner("Generating forecast..."):
             predictor(asin, region)
 
 
