@@ -8,7 +8,7 @@ category as
 )
 
 
-select year_month, category, region, sum(units_sold) as "units sold"
+select year_month, category, region, sum(units_sold) as units_sold
 from
 (
     select iff(month(date) > 9,
@@ -22,7 +22,7 @@ from
     from STREAMLIT_POC.SANDBOX.STOCK_PERFORMANCE_TEST_VIEW a
     left join category b
     on a.asin = b.asin
-    where region =  '{region}'
+    where region = '{region}'
     and b.category is not null
 )
 group by year_month, category, region

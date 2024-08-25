@@ -70,10 +70,9 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
 
                 st.empty()
 
-                display_metric("Units sold", f"{month_name} {year}", units_sold_data, "pie", "CATEGORY", "units sold")
+                display_metric("Units sold", f"{month_name} {year}", units_sold_data, "pie", "CATEGORY", "units_sold")
                 display_metric("% of net sales spent in advertisement", f"{month_name} {year}", net_sales_data, "bar",
-                               "CATEGORY",
-                               "% of net sales spent in ad")
+                               "CATEGORY", "% of net sales spent in ad")
 
     def units_sold(self, region, year_month):
         return self.query_data(0, region, year_month)
