@@ -102,12 +102,11 @@ def sales_predictor():
     st.header("Sales Predictor")
 
     asin = st.text_input("Enter ASIN:", "")
-    region_options = ["EU", "US", "UK", "JP"]
-    region = st.selectbox("Select a region:", region_options)
+    region = st.selectbox("Select a region:", ["EU", "US", "UK", "JP"], index=None, placeholder="...")
 
     if st.button("Get Forecast"):
         if not asin or not region:
-            st.error("Please enter an ASIN and region")
+            st.error("Please enter ASIN and region")
         else:
             predictor(asin, region)
 
@@ -127,6 +126,11 @@ def predictor(asin, region):
         if not df_preprocessed.empty:
             model_handler = LSTMModelHandler()
             predictions = model_handler.predict(df_preprocessed)
+
+            if predictions == "Failed to predict. There is no sale price historical data for this ASIN and region.":
+                st.write(predictions)
+                return None
+
             forecast_data = [{
                 'Date': datetime(year_today + (month_today + m - 1) // 12,
                                  (month_today + m - 1) % 12 + 1, 1).strftime('%B %Y'),

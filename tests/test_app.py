@@ -55,7 +55,7 @@ def test_sales_predictor_without_input():
             patch('app.st.button', return_value=True), \
             patch('app.st.error') as mock_error:
         app.sales_predictor()
-        mock_error.assert_called_once_with("Please enter an ASIN and region")
+        mock_error.assert_called_once_with("Please enter ASIN and region")
 
 
 def test_predictor_with_valid_data():

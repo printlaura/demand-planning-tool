@@ -45,11 +45,17 @@ class LSTMModelHandler:
         # create a sequence for prediction
         sequence = sequence.reshape((1, self.n_past, df.shape[1]))
 
+        if df['PRICE'].isnull().any():
+            return None
+
         return sequence
 
-    def predict(self, sequence):
-        sequence = self.process_input(sequence)
+    def predict(self, df):
+        sequence = self.process_input(df)
         predictions = []
+
+        if not sequence:
+            return "Failed to predict. There is no sale price historical data for this ASIN and region."
 
         for i in range(6):
             model = self.models[i]

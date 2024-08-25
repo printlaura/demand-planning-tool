@@ -15,7 +15,7 @@ class SalesDataPreprocessor:
         self.df = self.sf_query_executor.execute_query(query, conn)
 
         if self.df is None or self.df.empty:
-            raise ValueError("No data retrieved from query.")
+            raise ValueError("Failed to get prediction: there is no historical data available in Snowflake.")
 
     def preprocess_data(self):
         if self.df is None:
