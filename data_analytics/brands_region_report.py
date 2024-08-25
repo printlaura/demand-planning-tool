@@ -33,13 +33,12 @@ def display_metric(subheader, description, data, viz_type, x_axis, y_axis):
 
 class BrandsPerRegionCase(BaseAnalyticsCase):
     def __init__(self, connection):
-        super().__init__(['data_analytics/queries/brands/net_sales_per_brand_region.sql',
-                          'data_analytics/queries/brands/units_sold_per_brand_region.sql'
+        super().__init__(['data_analytics/queries/brands/units_sold_per_brand_region.sql',
+                          'data_analytics/queries/brands/net_sales_per_brand_region.sql',
                           ],
                          conn=connection)
 
     def render(self):
-
         region, year, month = filters_selection()
 
         if st.sidebar.button("see report"):
@@ -48,7 +47,7 @@ class BrandsPerRegionCase(BaseAnalyticsCase):
                 return
 
             if int(year) == datetime.now().year and int(month) > datetime.now().month:
-                st.write("The selected month is invalid. Please select a previous date.")
+                st.error("The selected month is invalid. Please select a previous date.")
                 return
 
             month_name = calendar.month_name[int(month)]
@@ -67,15 +66,13 @@ class BrandsPerRegionCase(BaseAnalyticsCase):
                                "net sales in EUR")
 
     def units_sold(self, region, year_month):
-        query = self.load_sql_query(1, region=region, year_month=year_month)
-        data, columns = self.run_query(query)
-        if not data or not columns:
-            return None
-
-        return self.data_to_df(data, columns)
+        return self.query_data(0, region, year_month)
 
     def net_sales(self, region, year_month):
-        query = self.load_sql_query(0, region=region, year_month=year_month)
+        return self.query_data(1, region, year_month)
+
+    def query_data(self, query_index, region, year_month):
+        query = self.load_sql_query(query_index, region=region, year_month=year_month)
         data, columns = self.run_query(query)
         if not data or not columns:
             return None

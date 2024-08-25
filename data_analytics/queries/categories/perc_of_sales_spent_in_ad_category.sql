@@ -34,6 +34,6 @@ select category,
         year_month,
         round(div0(sum(ad_spend) * 100,sum(net_sales)), 2) as "% of net sales spent in ad"
 from net_sales a
-where region =  '{region}'
-    and year_month = :year_month
+where region = '{region}'
+    and year_month = '{year_month}'
 group by category, region, year_month
