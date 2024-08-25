@@ -6,7 +6,7 @@ import pandas as pd
 
 def mock_visualization_data():
     return pd.DataFrame({
-        "YEAR_MONTH": ["2023-01", "2023-02"],
+        "YEAR_MONTH": ["202301", "202302"],
         "units sold": [100, 150],
         "net sales in EUR": [2000.50, 3500.75],
         "average sale price": [20.05, 22.75],
@@ -36,8 +36,8 @@ class TestAsinRegionCase(unittest.TestCase):
     @patch('data_analytics.asin_region_report.AsinRegionCase.data_to_df')
     def test_units_sold_with_data(self, mock_data_to_df, mock_run_query, mock_load_sql_query, mock_bar_chart):
         sample_data = [
-            ("2023-01", 100),
-            ("2023-02", 150),
+            ("202301", 100),
+            ("202302", 150),
         ]
         sample_columns = ['YEAR_MONTH', 'units sold']
         df = pd.DataFrame(sample_data, columns=sample_columns)
@@ -50,7 +50,7 @@ class TestAsinRegionCase(unittest.TestCase):
         mock_load_sql_query.assert_called_once()
         mock_run_query.assert_called_once()
         mock_data_to_df.assert_called_once()
-        mock_bar_chart.assert_called_once_with(df)
+        mock_bar_chart.assert_called_once_with()
 
     @patch('streamlit.bar_chart')
     @patch('data_analytics.asin_region_report.AsinRegionCase.load_sql_query')
@@ -58,8 +58,8 @@ class TestAsinRegionCase(unittest.TestCase):
     @patch('data_analytics.asin_region_report.AsinRegionCase.data_to_df')
     def test_net_sales_with_data(self, mock_data_to_df, mock_run_query, mock_load_sql_query, mock_bar_chart):
         sample_data = [
-            ("2023-01", 2000.50),
-            ("2023-02", 3500.75),
+            ("202301", 2000.50),
+            ("202302", 3500.75),
         ]
         sample_columns = ['YEAR_MONTH', 'net sales in EUR']
 
@@ -79,8 +79,8 @@ class TestAsinRegionCase(unittest.TestCase):
     @patch('data_analytics.asin_region_report.AsinRegionCase.data_to_df')
     def test_avg_sale_price_with_data(self, mock_data_to_df, mock_run_query, mock_load_sql_query, mock_bar_chart):
         sample_data = [
-            ("2023-01", 20.05),
-            ("2023-02", 22.75),
+            ("202301", 20.05),
+            ("202302", 22.75),
         ]
         sample_columns = ['YEAR_MONTH', 'average sale price']
 
@@ -100,8 +100,8 @@ class TestAsinRegionCase(unittest.TestCase):
     @patch('data_analytics.asin_region_report.AsinRegionCase.data_to_df')
     def test_oos_days_with_data(self, mock_data_to_df, mock_run_query, mock_load_sql_query, mock_bar_chart):
         sample_data = [
-            ("2023-01", 5),
-            ("2023-02", 3),
+            ("202301", 5),
+            ("202302", 3),
         ]
         sample_columns = ['YEAR_MONTH', 'total Out of Stock days']
 
@@ -128,10 +128,10 @@ class TestAsinRegionCase(unittest.TestCase):
     def test_render_with_valid_filters(self, mock_oos_days, mock_avg_sale_price, mock_net_sales, mock_units_sold,
                                        mock_spinner, mock_write, mock_subheader, mock_title, mock_button,
                                        mock_filters_selection):
-        mock_oos_days.return_value = pd.DataFrame([{"YEAR_MONTH": "2023-01", "total Out of Stock days": 0}])
-        mock_avg_sale_price.return_value = pd.DataFrame([{"YEAR_MONTH": "2023-01", "average sale price": 20.0}])
-        mock_net_sales.return_value = pd.DataFrame([{"YEAR_MONTH": "2023-01", "net sales in EUR": 1000.0}])
-        mock_units_sold.return_value = pd.DataFrame([{"YEAR_MONTH": "2023-01", "units sold": 50}])
+        mock_oos_days.return_value = pd.DataFrame([{"YEAR_MONTH": "202301", "total Out of Stock days": 0}])
+        mock_avg_sale_price.return_value = pd.DataFrame([{"YEAR_MONTH": "202301", "average sale price": 20.0}])
+        mock_net_sales.return_value = pd.DataFrame([{"YEAR_MONTH": "202301", "net sales in EUR": 1000.0}])
+        mock_units_sold.return_value = pd.DataFrame([{"YEAR_MONTH": "202301", "units sold": 50}])
 
         case = AsinRegionCase(self.mock_connection)
         case.render()
