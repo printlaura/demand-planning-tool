@@ -130,7 +130,7 @@ def predictor(asin, region):
             predictions = model_handler.predict(df_preprocessed)
 
             if predictions == "Failed to predict. There is no sale price historical data for this ASIN and region.":
-                st.write(predictions)
+                st.error(predictions)
                 return None
 
             forecast_data = [{
