@@ -33,8 +33,8 @@ sale_price AS
     (
         SELECT asin, date, region, sale_price
         FROM STREAMLIT_POC.SANDBOX.ASIN_TRACKING_DETAILED_VIEW
-        WHERE asin = upper('{asin}')
-          AND region = upper('{region}')
+        WHERE asin = '{asin}'
+          AND region = '{region}'
           AND date < DATE_TRUNC('month', CURRENT_DATE)
     )
     GROUP BY asin, region, year, month
