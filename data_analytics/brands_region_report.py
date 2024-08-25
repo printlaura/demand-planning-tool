@@ -9,7 +9,7 @@ def filters_selection():
     year = st.sidebar.selectbox("Select a year:", ["2023", "2024"], index=None, placeholder="...")
     month = st.sidebar.selectbox("Select a month:", ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11",
                                                      "12"], index=None, placeholder="...")
-    if month:
+    if month and year:
         if int(year) == datetime.now().year and int(month) > datetime.now().month:
             st.write("The selected month is invalid. Please select a previous date.")
             return None

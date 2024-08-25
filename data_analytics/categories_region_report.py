@@ -40,7 +40,7 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
     def render(self):
         region, year, month = filters_selection()
 
-        if st.sidebar.button("submit"):
+        if st.sidebar.button("see report"):
             if not region or not year or not month:
                 st.error("Please select region, year and month.")
                 return
