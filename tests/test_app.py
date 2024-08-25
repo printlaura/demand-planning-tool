@@ -50,12 +50,13 @@ def test_page_navigation_to_home():
 
 
 def test_sales_predictor_without_input():
-    with patch('app.st.text_input', return_value=None), \
+    with patch('app.st.text_input', return_value=""), \
             patch('app.st.selectbox', return_value="EU"), \
             patch('app.st.button', return_value=True), \
+            patch('app.sanitize_input', return_value=False), \
             patch('app.st.error') as mock_error:
         app.sales_predictor()
-        mock_error.assert_called_once_with("Please enter ASIN and region")
+        mock_error.assert_called_once_with("Please enter valid ASIN and region")
 
 
 def test_predictor_with_valid_data():
