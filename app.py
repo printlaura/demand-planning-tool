@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 from datetime import datetime
 import plotly.express as px
+import re
 
 from snowflake_query_executor import SnowflakeQueryExecutor
 from db_connector import get_snowflake_connection
@@ -21,6 +22,10 @@ def main():
         page_navigation()
 
 
+def sanitize_input(input):
+    return re.fullmatch(r'^[A-Za-z0-9_]{8,24}$', input) is not None
+
+
 def user_login():
     st.title(" log in to DPT")
 
@@ -29,26 +34,30 @@ def user_login():
         password = st.text_input("password", type="password")
         submitted = st.form_submit_button("log in")
 
-        if submitted and username and password:
-            try:
-                connection = get_snowflake_connection(user=username, password=password)
+        if submitted:
+            if not sanitize_input(username) or not sanitize_input(password):
+                st.error("Invalid username or password.")
+                return None
 
-                if connection:
-                    st.session_state["logged_in"] = True
-                    st.session_state["sf_connection"] = connection
-                    st.session_state["sf_user"] = username
-                    st.session_state["current_page"] = "Home"
-                    st.rerun()
-                else:
-                    st.warning("Failed to log in. Either user name or password are incorrect.")
+            if username and password:
+                try:
+                    connection = get_snowflake_connection(user=username, password=password)
 
-            except Exception as e:
-                st.error("Login failed. Either user name or password are incorrect.")
-                st.exception(e)
+                    if connection:
+                        st.session_state["logged_in"] = True
+                        st.session_state["sf_connection"] = connection
+                        st.session_state["sf_user"] = username
+                        st.session_state["current_page"] = "Home"
+                        st.rerun()
+                    else:
+                        st.warning("Failed to log in. Either user name or password are incorrect.")
+
+                except Exception as e:
+                    st.error("Login failed. Either user name or password are incorrect.")
+                    st.exception(e)
 
 
 def page_navigation():
-
     current_page = st.session_state.get("current_page", "Home")
 
     if current_page == "Home":
@@ -101,15 +110,15 @@ def logout():
 def sales_predictor():
     st.header("Sales Predictor")
 
-    asin = st.text_input("Enter ASIN:", "")
+    asin = st.text_input("Enter ASIN:", "").strip().upper()
     region = st.selectbox("Select a region:", ["EU", "US", "UK", "JP"], index=None, placeholder="...")
 
     if st.button("Get Forecast"):
-        if not asin or not region:
-            st.error("Please enter ASIN and region")
+        if not sanitize_input(asin) or not region:
+            st.error("Please enter valid ASIN and region")
             return
 
-        with st.spinner("Generating forecast..."):
+        with st.spinner("Generating forecast. This might take a few seconds ..."):
             predictor(asin, region)
 
 
@@ -130,7 +139,7 @@ def predictor(asin, region):
             predictions = model_handler.predict(df_preprocessed)
 
             if predictions == "Failed to predict. There is no sale price historical data for this ASIN and region.":
-                st.write(predictions)
+                st.error(predictions)
                 return None
 
             forecast_data = [{
@@ -149,6 +158,7 @@ def predictor(asin, region):
     except Exception as e:
         st.error("An error occurred during prediction: " + str(e))
 
+
 def render_predictions(df):
     st.write("")
     st.write("")
@@ -157,7 +167,6 @@ def render_predictions(df):
     st.write("")
     fig = px.line(df, x='Date', y='Predicted sales in units', title='Forecast')
     st.plotly_chart(fig)
-
 
 
 def analytics():

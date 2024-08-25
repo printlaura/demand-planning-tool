@@ -1,9 +1,10 @@
-from data_analytics.base_case import BaseAnalyticsCase
 import streamlit as st
+import re
+from data_analytics.base_case import BaseAnalyticsCase
 
 
 def filters_selection():
-    asin = st.sidebar.text_input("Enter ASIN:", "")
+    asin = st.sidebar.text_input("Enter ASIN:", "").strip().upper()
     region = st.sidebar.selectbox("Select a region:", ["EU", "US", "UK", "JP"], index=None, placeholder="...")
     year = st.sidebar.multiselect("Select year(s):", ["2023", "2024"], default=[])
 
@@ -33,6 +34,10 @@ def display_metric(subheader, description, data, viz_type, x_axis, y_axis):
     st.write("")
 
 
+def validate_asin(asin):
+    return re.fullmatch(r'^[A-Z0-9]{8,12}$', asin) is not None
+
+
 class AsinRegionCase(BaseAnalyticsCase):
     def __init__(self, connection):
         super().__init__(['data_analytics/queries/asin/units_sold_per_asin_region.sql',
@@ -43,13 +48,16 @@ class AsinRegionCase(BaseAnalyticsCase):
                          conn=connection)
 
     def render(self):
-
         asin, region, year = filters_selection()
 
         if st.sidebar.button("see report"):
             if not asin or not region:
-                st.error("Please enter ASIN and region.")
+                st.sidebar.error("Please enter ASIN and region.")
                 return
+
+            if not validate_asin(asin):
+                st.sidebar.error("Invalid ASIN.")
+                return None
 
             st.title("ASIN")
 
@@ -66,38 +74,27 @@ class AsinRegionCase(BaseAnalyticsCase):
                 st.empty()
 
                 display_metric("Units sold", f"{asin} - {region}", units_sold_data, "bar", "YEAR_MONTH", "units sold")
-                display_metric("Net sales", f"{asin} - {region}", net_sales_data, "bar", "YEAR_MONTH", "net sales in EUR")
+                display_metric("Net sales", f"{asin} - {region}", net_sales_data, "bar", "YEAR_MONTH",
+                               "net sales in EUR")
                 display_metric("Average sale price", f"{asin} - {region}", avg_sale_price_data, "bar", "YEAR_MONTH",
                                "average sale price")
                 display_metric("Out of Stock days", f"{asin} - {region}", oos_days_data, "bar", "YEAR_MONTH",
                                "total Out of Stock days")
 
     def units_sold(self, asin, region, year_filter):
-        query = self.load_sql_query(0, asin=asin, region=region, year_filter=year_filter)
-        data, columns = self.run_query(query)
-        if not data or not columns:
-            return None
-
-        return self.data_to_df(data, columns)
+        return self.query_data(0, asin, region, year_filter)
 
     def net_sales(self, asin, region, year_filter):
-        query = self.load_sql_query(1, asin=asin, region=region, year_filter=year_filter)
-        data, columns = self.run_query(query)
-        if not data or not columns:
-            return None
-
-        return self.data_to_df(data, columns)
+        return self.query_data(1, asin, region, year_filter)
 
     def avg_sale_price(self, asin, region, year_filter):
-        query = self.load_sql_query(2, asin=asin, region=region, year_filter=year_filter)
-        data, columns = self.run_query(query)
-        if not data or not columns:
-            return None
-
-        return self.data_to_df(data, columns)
+        return self.query_data(2, asin, region, year_filter)
 
     def oos_days(self, asin, region, year_filter):
-        query = self.load_sql_query(3, asin=asin, region=region, year_filter=year_filter)
+        return self.query_data(3, asin, region, year_filter)
+
+    def query_data(self, query_index, asin, region, year_filter):
+        query = self.load_sql_query(query_index, asin=asin, region=region, year_filter=year_filter)
         data, columns = self.run_query(query)
         if not data or not columns:
             return None

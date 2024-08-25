@@ -33,8 +33,8 @@ def display_metric(subheader, description, data, viz_type, x_axis, y_axis):
 
 class CategoriesPerRegionCase(BaseAnalyticsCase):
     def __init__(self, connection):
-        super().__init__(['data_analytics/queries/categories/perc_of_sales_spent_in_ad_category.sql',
-                          'data_analytics/queries/categories/units_sold_per_category_region.sql'],
+        super().__init__(['data_analytics/queries/categories/units_sold_per_category_region.sql',
+                         'data_analytics/queries/categories/perc_of_sales_spent_in_ad_category.sql'],
                          conn=connection)
 
     def render(self):
@@ -46,7 +46,7 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
                 return
 
             if int(year) == datetime.now().year and int(month) > datetime.now().month:
-                st.write("The selected month is invalid. Please select a previous date.")
+                st.error("The selected month is invalid. Please select a previous date.")
                 return
 
             month_name = calendar.month_name[int(month)]
@@ -61,19 +61,18 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
                 st.empty()
 
                 display_metric("Units sold", f"{month_name} {year}", units_sold_data, "bar", "CATEGORY", "units sold")
-                display_metric("% of net sales spent in advertisement", f"{month_name} {year}", net_sales_data, "bar", "CATEGORY",
+                display_metric("% of net sales spent in advertisement", f"{month_name} {year}", net_sales_data, "bar",
+                               "CATEGORY",
                                "% of net sales spent in ad")
 
-    def perc_of_sales_spent_in_ad(self, region, year_month):
-        query = self.load_sql_query(0, region=region, year_month=year_month)
-        data, columns = self.run_query(query)
-        if not data or not columns:
-            return None
-
-        return self.data_to_df(data, columns)
-
     def units_sold(self, region, year_month):
-        query = self.load_sql_query(1, region=region, year_month=year_month)
+        return self.query_data(0, region, year_month)
+
+    def perc_of_sales_spent_in_ad(self, region, year_month):
+        return self.query_data(1, region, year_month)
+
+    def query_data(self, query_index, region, year_month):
+        query = self.load_sql_query(query_index, region=region, year_month=year_month)
         data, columns = self.run_query(query)
         if not data or not columns:
             return None
