@@ -1,4 +1,5 @@
 import unittest
+from datetime import datetime
 from unittest.mock import patch, MagicMock
 from data_analytics.categories_region_report import CategoriesPerRegionCase, filters_selection
 
@@ -58,3 +59,18 @@ class TestCategoriesPerRegionCase(unittest.TestCase):
 
         self.assertIsNone(result)
         mock_error.assert_called_once_with("Please select region, year and month.")
+
+
+    @patch('streamlit.sidebar.selectbox')
+    @patch('streamlit.sidebar.button')
+    @patch('streamlit.error')
+    def test_render_with_future_date_selection(self, mock_error, mock_button, mock_selectbox):
+        mock_selectbox.side_effect = ["EU", str(datetime.now().year), str(datetime.now().month + 1)]
+        mock_button.return_value = True
+
+        mock_connection = MagicMock()
+        case = CategoriesPerRegionCase(mock_connection)
+
+        case.render()
+
+        mock_error.assert_called_with("The selected month is invalid. Please select a previous date.")
