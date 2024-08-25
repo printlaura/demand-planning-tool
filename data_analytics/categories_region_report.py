@@ -1,5 +1,6 @@
 from data_analytics.base_case import BaseAnalyticsCase
 import streamlit as st
+import plotly.express as px
 import calendar
 from datetime import datetime
 
@@ -22,8 +23,13 @@ def display_metric(subheader, description, data, viz_type, x_axis, y_axis):
     st.write("")
 
     if data is not None:
-        if viz_type == 'bar':
+        if viz_type == "bar":
             st.bar_chart(data, x=x_axis, y=y_axis)
+        if viz_type == "pie":
+            fig = px.pie(data, names=x_axis, values=y_axis)
+            fig.update_layout(width=800, height=600, legend=dict(font=dict(size=14)))
+            st.write("Click or unclick Category names to display specific values.")
+            st.plotly_chart(fig)
     else:
         st.write(f"No {subheader} data available for {description}.")
 
@@ -60,7 +66,7 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
 
                 st.empty()
 
-                display_metric("Units sold", f"{month_name} {year}", units_sold_data, "bar", "CATEGORY", "units sold")
+                display_metric("Units sold", f"{month_name} {year}", units_sold_data, "pie", "CATEGORY", "units sold")
                 display_metric("% of net sales spent in advertisement", f"{month_name} {year}", net_sales_data, "bar",
                                "CATEGORY",
                                "% of net sales spent in ad")
