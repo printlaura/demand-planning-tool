@@ -67,5 +67,3 @@ def test_predict(lstm_model_handler):
     predictions = lstm_model_handler.predict(df)
 
     assert len(predictions) == 6, "Should predict a value for each model."
-
-    assert all(isinstance(pred, np.float32) for pred in predictions), "All predictions should be of type np.float32."

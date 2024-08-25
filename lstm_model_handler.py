@@ -64,4 +64,4 @@ class LSTMModelHandler:
             prediction = self.scalers_units_sold[i].inverse_transform(prediction)
             predictions.append(prediction[0][0])
 
-        return map(math.ceil, predictions)
+        return list(map(math.ceil, predictions))
