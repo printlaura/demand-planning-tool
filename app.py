@@ -110,7 +110,7 @@ def logout():
 def sales_predictor():
     st.header("Sales Predictor")
 
-    asin = st.text_input("Enter ASIN:", "").strip().upper
+    asin = st.text_input("Enter ASIN:", "").strip().upper()
     region = st.selectbox("Select a region:", ["EU", "US", "UK", "JP"], index=None, placeholder="...")
 
     if st.button("Get Forecast"):
