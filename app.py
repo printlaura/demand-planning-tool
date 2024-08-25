@@ -118,7 +118,7 @@ def sales_predictor():
             st.error("Please enter valid ASIN and region")
             return
 
-        with st.spinner("Generating forecast..."):
+        with st.spinner("Generating forecast. This might take a few seconds ..."):
             predictor(asin, region)
 
 
