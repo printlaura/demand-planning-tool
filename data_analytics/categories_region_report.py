@@ -16,14 +16,15 @@ def filters_selection():
         return None, None, None
 
 
-def display_metric(subheader, description, data, viz_type, x_axis, y_axis):
+def display_metric(subheader, description, month, year, data, viz_type, x_axis, y_axis):
     st.subheader(subheader)
     st.write(description)
 
     if data is not None:
         if viz_type == "bar":
-            fig = px.bar(data, x=x_axis, y=y_axis, color=x_axis)
-            fig.update_layout(showlegend=False, xaxis_title="", yaxis_title=f"{y_axis}")
+            fig = px.bar(data, x=x_axis, y=y_axis, text=y_axis, color=x_axis)
+            fig.update_layout(width=1000, height=550, showlegend=False, xaxis_title="", yaxis_title=f"{y_axis}")
+            fig.update_traces(width=0.7, textposition='outside')
             st.plotly_chart(fig)
             st.write("")
             st.write("")
@@ -31,12 +32,11 @@ def display_metric(subheader, description, data, viz_type, x_axis, y_axis):
         if viz_type == "pie":
             fig = px.pie(data, names=x_axis, values=y_axis)
             fig.update_layout(width=850, height=650, legend=dict(font=dict(size=16)))
-            st.write("Click or unclick Category names to filter out categories.")
             st.plotly_chart(fig)
             st.write("")
             st.write("")
     else:
-        st.write(f"No {subheader} data available for {description}.")
+        st.write(f"No {subheader} data available for {month} {year}.")
 
 
 class CategoriesPerRegionCase(BaseAnalyticsCase):
@@ -72,10 +72,30 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
 
                 st.empty()
 
-                display_metric("Net sales", f"{month_name} {year}", net_sales_data, "pie", "CATEGORY", "NET_SALES_IN_EUR")
-                display_metric("Units sold", f"{month_name} {year}", units_sold_data, "bar", "CATEGORY", "units sold")
-                display_metric("% of net sales spent in advertisement", f"{month_name} {year}", ad_spent_data, "bar",
-                               "CATEGORY", "% of net sales spent in ad")
+                display_metric("Net sales",
+                               f"Share of the company's total net sales in {month_name} {year} per category.",
+                               month_name,
+                               year,
+                               net_sales_data,
+                               "pie",
+                               "CATEGORY",
+                               "NET_SALES_IN_EUR")
+                display_metric("Units sold",
+                               f"Total units sold in {month_name} {year}.",
+                               month_name,
+                               year,
+                               units_sold_data,
+                               "bar",
+                               "CATEGORY",
+                               "units sold")
+                display_metric("Advertisement spends",
+                               f"Percentage of the total net sales spent in paid advertisement in {month_name} {year}.",
+                               month_name,
+                               year,
+                               ad_spent_data,
+                               "bar",
+                               "CATEGORY",
+                               "% of net sales spent in ad")
 
     def net_sales(self, region, year_month):
         return self.query_data(0, region, year_month)

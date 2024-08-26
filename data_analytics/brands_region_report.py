@@ -16,25 +16,27 @@ def filters_selection():
         return None, None, None
 
 
-def display_metric(subheader, description, data, viz_type, x_axis, y_axis):
+def display_metric(subheader, description, month, year, data, viz_type, x_axis, y_axis):
     st.subheader(subheader)
     st.write(description)
-    st.write("")
-    st.write("")
 
     if data is not None:
-        if viz_type == 'bar':
-            st.bar_chart(data, x=x_axis, y=y_axis)
+        if viz_type == "bar":
+            fig = px.bar(data, x=x_axis, y=y_axis, text=y_axis, color=x_axis)
+            fig.update_layout(width=1000, height=550, showlegend=False, xaxis_title="", yaxis_title=f"{y_axis}")
+            fig.update_traces(width=0.7, textposition='outside')
+            st.plotly_chart(fig)
+            st.write("")
+            st.write("")
 
         if viz_type == "pie":
             fig = px.pie(data, names=x_axis, values=y_axis)
-            fig.update_layout(width=800, height=600, legend=dict(font=dict(size=14)))
-            st.write("Click or unclick brand names to filter out brands.")
+            fig.update_layout(width=800, height=700, legend=dict(font=dict(size=14)))
             st.plotly_chart(fig)
             st.write("")
             st.write("")
     else:
-        st.write(f"No {subheader} data available for {description}.")
+        st.write(f"No {subheader} data available for {month} {year}.")
 
     st.write("")
     st.write("")
@@ -70,8 +72,21 @@ class BrandsPerRegionCase(BaseAnalyticsCase):
 
                 st.empty()
 
-                display_metric("Units sold", f"{month_name} {year}", units_sold_data, "bar", "BRAND", "units sold")
-                display_metric("Net sales", f"{month_name} {year}", net_sales_data, "pie", "BRAND",
+                display_metric("Units sold",
+                               f"Total units sold in {month_name} {year}.",
+                               month_name,
+                               year,
+                               units_sold_data,
+                               "bar",
+                               "BRAND",
+                               "units sold")
+                display_metric("Net sales",
+                               f"Share of the company's total net sales in {month_name} {year} per brand.",
+                               month_name,
+                               year,
+                               net_sales_data,
+                               "pie",
+                               "BRAND",
                                "net sales in EUR")
 
     def units_sold(self, region, year_month):
