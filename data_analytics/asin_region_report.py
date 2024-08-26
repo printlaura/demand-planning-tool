@@ -25,32 +25,36 @@ def display_metric(subheader, description, asin, region, data, viz_type, x_axis,
         return None
 
     if data is not None:
+        st.write(description)
+
+        data['date_order'] = pd.to_datetime(data[x_axis], format='%m/%Y')
+        data = data.sort_values(by='date_order')
+        data = data.drop(columns=['date_order', 'ASIN', 'REGION'])
+
         if viz_type == "line":
-            with st.expander(description):
-                data['date_order'] = pd.to_datetime(data[x_axis], format='%m/%Y')
-                data = data.sort_values(by='date_order')
+            with st.expander("see table"):
+                st.dataframe(data, use_container_width=True)
 
-                fig = px.line(data, x=x_axis, y=y_axis, text=y_axis)
-                fig.update_traces(textposition='top center')
+            fig = px.line(data, x=x_axis, y=y_axis, text=y_axis)
+            fig.update_traces(textposition='top center')
+            st.plotly_chart(fig)
 
-                st.plotly_chart(fig)
+            st.write("---")
+            st.write("")
+            st.write("")
 
-                st.write("")
-                st.write("")
+        elif viz_type == "bar":
+            with st.expander("see table"):
+                st.dataframe(data, use_container_width=True)
 
-        if viz_type == "bar":
-            with st.expander(description):
-                data['date_order'] = pd.to_datetime(data[x_axis], format='%m/%Y')
-                data = data.sort_values(by='date_order')
+            fig = px.bar(data, x=x_axis, y=y_axis, text=y_axis, color=x_axis)
+            fig.update_layout(width=1000, height=550, showlegend=False)
+            fig.update_traces(width=0.7, textposition='outside')
+            st.plotly_chart(fig)
 
-                fig = px.bar(data, x=x_axis, y=y_axis, text=y_axis, color=x_axis)
-                fig.update_layout(width=1000, height=550, showlegend=False)
-                fig.update_traces(width=0.7, textposition='outside')
-
-                st.plotly_chart(fig)
-
-                st.write("")
-                st.write("")
+            st.write("---")
+            st.write("")
+            st.write("")
     else:
         st.write(f"No {subheader} data available for {asin} / {region}.")
 

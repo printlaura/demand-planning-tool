@@ -1,12 +1,12 @@
 -- avg monthly sale price per ASIN/region
 
-select round(avg(sale_price), 3) as "average sale price",
-        asin,
-       region,
-       iff(month(date) > 9,
+select iff(month(date) > 9,
             cast(month(date) as varchar) || '/' || cast(year(date) as varchar),
             '0' || cast(month(date) as varchar) || '/' || cast(year(date) as varchar)
-        ) as "year & month"
+        ) as "year & month",
+        asin,
+        region,
+        round(avg(sale_price), 3) as "average sale price"
 from
 (
     select asin, date, region, sale_price

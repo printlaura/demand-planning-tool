@@ -7,7 +7,7 @@ oos_data as
             '0' || cast(month(date) as varchar) || '/' || cast(year(date) as varchar)
         ) as "year & month",
             asin,
-            brand,
+           brand,
             region,
             iff(is_out_of_stock = 'Y', 1, 0) as oos
     from STREAMLIT_POC.SANDBOX.STOCK_PERFORMANCE_TEST_VIEW
@@ -16,6 +16,6 @@ oos_data as
     {year_filter} -- pass year condition dynamically from python input
 )
 
-select "year & month", asin, brand, region, sum(oos) as "total Out of Stock days"
+select "year & month", asin, region, sum(oos) as "total Out of Stock days"
 from oos_data
-group by brand, asin, region, "year & month"
+group by asin, region, "year & month"

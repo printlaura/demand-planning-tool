@@ -20,22 +20,34 @@ def display_metric(subheader, description, month, year, data, viz_type, x_axis, 
     st.write(f"#### {subheader}")
 
     if data is not None:
-        if viz_type == "bar":
-            with st.expander(description):
-                fig = px.bar(data, x=x_axis, y=y_axis, text=y_axis, color=x_axis)
-                fig.update_layout(width=1000, height=550, showlegend=False, xaxis_title="", yaxis_title=f"{y_axis}")
-                fig.update_traces(width=0.7, textposition='outside')
-                st.plotly_chart(fig)
-                st.write("")
-                st.write("")
+        st.write(description)
 
-        if viz_type == "pie":
-            with st.expander(description):
-                fig = px.pie(data, names=x_axis, values=y_axis)
-                fig.update_layout(width=800, height=700, legend=dict(font=dict(size=14)))
-                st.plotly_chart(fig)
-                st.write("")
-                st.write("")
+        if viz_type == "bar":
+            with st.expander("see table"):
+                df = data.drop(columns=['YEAR_MONTH', 'REGION'])
+                st.dataframe(df, use_container_width=True)
+
+            fig = px.bar(data, x=x_axis, y=y_axis, text=y_axis, color=x_axis)
+            fig.update_layout(width=1000, height=550, showlegend=False, xaxis_title="", yaxis_title=f"{y_axis}")
+            fig.update_traces(width=0.7, textposition='outside')
+            st.plotly_chart(fig)
+
+            st.write("---")
+            st.write("")
+            st.write("")
+
+        elif viz_type == "pie":
+            with st.expander("see table"):
+                df = data.drop(columns=['YEAR_MONTH', 'REGION'])
+                st.dataframe(df, use_container_width=True)
+
+            fig = px.pie(data, names=x_axis, values=y_axis)
+            fig.update_layout(width=800, height=700, legend=dict(font=dict(size=14)))
+            st.plotly_chart(fig)
+
+            st.write("---")
+            st.write("")
+            st.write("")
     else:
         st.write(f"No {subheader} data available for {month} {year}.")
 
