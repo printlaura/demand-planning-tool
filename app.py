@@ -54,8 +54,6 @@ def user_login():
 
                 except Exception as e:
                     st.error("Login failed. Either user name or password are incorrect.")
-                    st.exception(e)
-
 
 def page_navigation():
     current_page = st.session_state.get("current_page", "Home")
