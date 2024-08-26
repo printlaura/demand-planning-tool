@@ -72,14 +72,6 @@ class BrandsPerRegionCase(BaseAnalyticsCase):
 
                 st.empty()
 
-                display_metric("Units sold",
-                               f"Total units sold in {month_name} {year}.",
-                               month_name,
-                               year,
-                               units_sold_data,
-                               "bar",
-                               "BRAND",
-                               "units sold")
                 display_metric("Net sales",
                                f"Share of the company's total net sales in {month_name} {year} per brand.",
                                month_name,
@@ -88,6 +80,14 @@ class BrandsPerRegionCase(BaseAnalyticsCase):
                                "pie",
                                "BRAND",
                                "net sales in EUR")
+                display_metric("Units sold",
+                               f"Total units sold in {month_name} {year}.",
+                               month_name,
+                               year,
+                               units_sold_data,
+                               "bar",
+                               "BRAND",
+                               "units sold")
 
     def units_sold(self, region, year_month):
         return self.query_data(0, region, year_month)
