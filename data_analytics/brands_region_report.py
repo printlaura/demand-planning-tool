@@ -65,7 +65,11 @@ class BrandsPerRegionCase(BaseAnalyticsCase):
             month_name = calendar.month_name[int(month)]
             year_month = year + month
 
-            st.title(f"Brands - {region}")
+            st.title(f"Brands overview")
+            st.subheader(f"region {region}")
+            st.write(f"{month_name} {year}")
+            st.write("")
+            st.write("")
 
             with st.spinner("Loading data..."):
                 units_sold_data = self.units_sold(region, year_month)
@@ -73,21 +77,9 @@ class BrandsPerRegionCase(BaseAnalyticsCase):
 
                 st.empty()
 
-                display_metric("Net sales",
-                               f"Share of the company's total net sales in {month_name} {year} per brand.",
-                               month_name,
-                               year,
-                               net_sales_data,
-                               "pie",
-                               "BRAND",
-                               "net sales in EUR")
-                display_metric("Units sold",
-                               f"Total units sold in {month_name} {year}.",
-                               month_name,
-                               year,
-                               units_sold_data,
-                               "bar",
-                               "BRAND",
+                display_metric("Net sales", f"Share of the company's total net sales in per brand.",
+                               month_name, year, net_sales_data, "pie", "BRAND", "net sales in EUR")
+                display_metric("Units sold", f"Total units sold.", month_name, year, units_sold_data, "bar", "BRAND",
                                "units sold")
 
     def units_sold(self, region, year_month):
