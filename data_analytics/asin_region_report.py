@@ -1,5 +1,7 @@
 import streamlit as st
 import re
+import plotly.express as px
+import pandas as pd
 from data_analytics.base_case import BaseAnalyticsCase
 
 
@@ -14,21 +16,26 @@ def filters_selection():
         return None, None, None
 
 
-def display_metric(subheader, description, data, viz_type, x_axis, y_axis):
+def display_metric(subheader, description, asin, region, data, viz_type, x_axis, y_axis):
     st.subheader(subheader)
     st.write(description)
-    st.write("")
-    st.write("")
 
-    if data is not None and subheader == "Out of Stock days" and data["total Out of Stock days"].sum() == 0:
-        st.write("This item has never been Out of Stock.")
+    if data is not None and subheader == "OOS days" and data["total Out of Stock days"].sum() == 0:
+        st.warning("This item has never been Out of Stock.")
         return None
 
     if data is not None:
-        if viz_type == 'bar':
-            st.bar_chart(data, x=x_axis, y=y_axis)
+        if viz_type == "bar":
+            data['date_order'] = pd.to_datetime(data[x_axis], format='%m/%Y')
+            data = data.sort_values(by='date_order')
+            fig = px.bar(data, x=x_axis, y=y_axis, text=y_axis, color=x_axis)
+            fig.update_layout(width=1000, height=550, showlegend=False, xaxis_title="", yaxis_title=f"{y_axis}")
+            fig.update_traces(width=0.7, textposition='outside')
+            st.plotly_chart(fig)
+            st.write("")
+            st.write("")
     else:
-        st.write(f"No {subheader} data available for {description}.")
+        st.write(f"No {subheader} data available for {asin} / {region}.")
 
     st.write("")
     st.write("")
@@ -73,13 +80,42 @@ class AsinRegionCase(BaseAnalyticsCase):
 
                 st.empty()
 
-                display_metric("Units sold", f"{asin} - {region}", units_sold_data, "bar", "year & month", "units sold")
-                display_metric("Net sales", f"{asin} - {region}", net_sales_data, "bar", "year & month",
-                               "net sales in EUR")
-                display_metric("Average sale price", f"{asin} - {region}", avg_sale_price_data, "bar", "year & month",
-                               "average sale price")
-                display_metric("Out of Stock days", f"{asin} - {region}", oos_days_data, "bar", "year & month",
-                               "total Out of Stock days")
+                display_metric("Units sold",
+                               f"Monthly units sold for {asin} / {region}.",
+                               asin,
+                               region,
+                               units_sold_data,
+                               "bar",
+                               "YEAR_MONTH",
+                               "units sold"
+                               )
+                display_metric("Net sales",
+                               f"Monthly net sales for {asin} / {region}.",
+                               asin,
+                               region,
+                               net_sales_data,
+                               "bar",
+                               "YEAR_MONTH",
+                               "net sales in EUR"
+                               )
+                display_metric("Average sale price",
+                               f"Monthly average sale price for {asin} / {region}.",
+                               asin,
+                               region,
+                               avg_sale_price_data,
+                               "bar",
+                               "YEAR_MONTH",
+                               "average sale price"
+                               )
+                display_metric("OOS days",
+                               f"Monthly count of Out of Stock days for {asin} / {region}.",
+                               asin,
+                               region,
+                               oos_days_data,
+                               "bar",
+                               "YEAR_MONTH",
+                               "total Out of Stock days"
+                               )
 
     def units_sold(self, asin, region, year_filter):
         return self.query_data(0, asin, region, year_filter)

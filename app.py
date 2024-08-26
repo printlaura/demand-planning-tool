@@ -95,7 +95,7 @@ def home():
     if st.button("Go to Analytics"):
         st.session_state["current_page"] = "Analytics"
         st.rerun()
-    if st.sidebar.button("Log out"):
+    if st.button("Log out"):
         logout()
         st.rerun()
 
