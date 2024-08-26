@@ -55,7 +55,7 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
                 return
 
             if int(year) == datetime.now().year and int(month) > datetime.now().month:
-                st.error("The selected month is invalid. Please select a previous date.")
+                st.error("The selected date is invalid. Please select a previous date.")
                 return
 
             month_name = calendar.month_name[int(month)]

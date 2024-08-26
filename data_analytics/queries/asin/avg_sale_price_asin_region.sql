@@ -6,7 +6,7 @@ select avg(sale_price) as "average sale price",
        iff(month(date) > 9,
             cast(year(date) as varchar) || cast(month(date) as varchar),
             cast(year(date) as varchar) || '0' || cast(month(date) as varchar)
-        ) as year_month
+        ) as "year & month"
 from
 (
     select asin, date, region, sale_price
@@ -15,4 +15,4 @@ from
         and region = '{region}'
         {year_filter} -- pass year condition dynamically from python input
 )
-group by asin, region, year_month
+group by asin, region, "year & month"
