@@ -111,7 +111,8 @@ def logout():
 
 
 def sales_predictor():
-    st.header("Sales Predictor")
+    st.title("Sales Predictor")
+    st.write("Predictions are based on the analysis of each ASIN & Region historical data.")
 
     asin = st.text_input("Enter ASIN:", "").strip().upper()
     region = st.selectbox("Select a region:", ["EU", "US", "UK", "JP"], index=None, placeholder="...")
@@ -165,12 +166,19 @@ def predictor(asin, region):
 def render_predictions(df, asin, region):
     st.write("")
     st.write("")
-    st.subheader(f"Forecast for {asin} / {region}")
-    st.write("")
-    st.write(df.to_html(index=False), unsafe_allow_html=True)
-    st.write("")
-    fig = px.line(df, x='Date', y='Units')
-    st.plotly_chart(fig)
+
+    with st.container():
+        st.write("")
+        st.write(f"### Forecast for **{asin}** / **{region}**")
+
+        st.write(df.to_html(index=False), unsafe_allow_html=True)
+
+        st.write("")
+        st.write("---")
+
+        fig = px.line(df, x='Date', y='Units')
+        fig.update_traces(textposition='top center')
+        st.plotly_chart(fig, use_container_width=True)
 
 
 def analytics():
