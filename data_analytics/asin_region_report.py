@@ -19,7 +19,6 @@ def filters_selection():
 
 def display_metric(subheader, description, asin, region, data, viz_type, x_axis, y_axis):
     st.subheader(subheader)
-    st.write(description)
 
     if data is not None and subheader == "OOS days" and data["total Out of Stock days"].sum() == 0:
         st.warning("This item has never been Out of Stock.")
@@ -27,29 +26,31 @@ def display_metric(subheader, description, asin, region, data, viz_type, x_axis,
 
     if data is not None:
         if viz_type == "line":
-            data['date_order'] = pd.to_datetime(data[x_axis], format='%m/%Y')
-            data = data.sort_values(by='date_order')
+            with st.expander(description):
+                data['date_order'] = pd.to_datetime(data[x_axis], format='%m/%Y')
+                data = data.sort_values(by='date_order')
 
-            fig = px.line(data, x=x_axis, y=y_axis, text=y_axis)
-            fig.update_traces(textposition='top center')
+                fig = px.line(data, x=x_axis, y=y_axis, text=y_axis)
+                fig.update_traces(textposition='top center')
 
-            st.plotly_chart(fig)
+                st.plotly_chart(fig)
 
-            st.write("")
-            st.write("")
+                st.write("")
+                st.write("")
 
         if viz_type == "bar":
-            data['date_order'] = pd.to_datetime(data[x_axis], format='%m/%Y')
-            data = data.sort_values(by='date_order')
+            with st.expander(description):
+                data['date_order'] = pd.to_datetime(data[x_axis], format='%m/%Y')
+                data = data.sort_values(by='date_order')
 
-            fig = px.bar(data, x=x_axis, y=y_axis, text=y_axis, color=x_axis)
-            fig.update_layout(width=1000, height=550, showlegend=False)
-            fig.update_traces(width=0.7, textposition='outside')
+                fig = px.bar(data, x=x_axis, y=y_axis, text=y_axis, color=x_axis)
+                fig.update_layout(width=1000, height=550, showlegend=False)
+                fig.update_traces(width=0.7, textposition='outside')
 
-            st.plotly_chart(fig)
+                st.plotly_chart(fig)
 
-            st.write("")
-            st.write("")
+                st.write("")
+                st.write("")
     else:
         st.write(f"No {subheader} data available for {asin} / {region}.")
 

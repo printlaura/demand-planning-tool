@@ -18,23 +18,24 @@ def filters_selection():
 
 def display_metric(subheader, description, month, year, data, viz_type, x_axis, y_axis):
     st.subheader(subheader)
-    st.write(description)
 
     if data is not None:
         if viz_type == "bar":
-            fig = px.bar(data, x=x_axis, y=y_axis, text=y_axis, color=x_axis)
-            fig.update_layout(width=1000, height=550, showlegend=False, xaxis_title="", yaxis_title=f"{y_axis}")
-            fig.update_traces(width=0.7, textposition='outside')
-            st.plotly_chart(fig)
-            st.write("")
-            st.write("")
+            with st.expander(description):
+                fig = px.bar(data, x=x_axis, y=y_axis, text=y_axis, color=x_axis)
+                fig.update_layout(width=1000, height=550, showlegend=False, xaxis_title="", yaxis_title=f"{y_axis}")
+                fig.update_traces(width=0.7, textposition='outside')
+                st.plotly_chart(fig)
+                st.write("")
+                st.write("")
 
         if viz_type == "pie":
-            fig = px.pie(data, names=x_axis, values=y_axis)
-            fig.update_layout(width=800, height=700, legend=dict(font=dict(size=14)))
-            st.plotly_chart(fig)
-            st.write("")
-            st.write("")
+            with st.expander(description):
+                fig = px.pie(data, names=x_axis, values=y_axis)
+                fig.update_layout(width=800, height=700, legend=dict(font=dict(size=14)))
+                st.plotly_chart(fig)
+                st.write("")
+                st.write("")
     else:
         st.write(f"No {subheader} data available for {month} {year}.")
 
