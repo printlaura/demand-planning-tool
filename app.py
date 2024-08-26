@@ -1,3 +1,5 @@
+import logging
+
 import pandas as pd
 import streamlit as st
 from datetime import datetime
@@ -54,6 +56,7 @@ def user_login():
 
                 except Exception as e:
                     st.error("Login failed. Either user name or password are incorrect.")
+                    logging.error("An error occurred: %s", str(e))
 
 def page_navigation():
     current_page = st.session_state.get("current_page", "Home")
