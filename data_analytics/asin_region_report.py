@@ -18,7 +18,7 @@ def filters_selection():
 
 
 def display_metric(subheader, description, asin, region, data, viz_type, x_axis, y_axis):
-    st.subheader(subheader)
+    st.write(f"#### {subheader}")
 
     if data is not None and subheader == "OOS days" and data["total Out of Stock days"].sum() == 0:
         st.warning("This item has never been Out of Stock.")
@@ -83,7 +83,11 @@ class AsinRegionCase(BaseAnalyticsCase):
                 st.sidebar.error("Invalid ASIN.")
                 return None
 
-            st.title("ASIN")
+            st.header(f"ASIN performance")
+            st.write("---")
+            st.subheader(f"{asin} / {region}")
+            st.write("")
+            st.write("")
 
             year_filter = ""
             if year:
@@ -97,42 +101,14 @@ class AsinRegionCase(BaseAnalyticsCase):
 
                 st.empty()
 
-                display_metric("Units sold",
-                               f"Monthly units sold for {asin} / {region}.",
-                               asin,
-                               region,
-                               units_sold_data,
-                               "line",
-                               "year & month",
-                               "units sold"
-                               )
-                display_metric("Net sales",
-                               f"Monthly net sales for {asin} / {region}.",
-                               asin,
-                               region,
-                               net_sales_data,
-                               "line",
-                               "year & month",
-                               "net sales in EUR"
-                               )
-                display_metric("Average sale price",
-                               f"Monthly average sale price for {asin} / {region}.",
-                               asin,
-                               region,
-                               avg_sale_price_data,
-                               "bar",
-                               "year & month",
-                               "average sale price"
-                               )
-                display_metric("OOS days",
-                               f"Monthly count of Out of Stock days for {asin} / {region}.",
-                               asin,
-                               region,
-                               oos_days_data,
-                               "bar",
-                               "year & month",
-                               "total Out of Stock days"
-                               )
+                display_metric("Units sold", f"Monthly units sold.", asin, region, units_sold_data, "line",
+                               "year & month", "units sold")
+                display_metric("Net sales", f"Monthly net sales.", asin, region, net_sales_data, "line",
+                               "year & month", "net sales in EUR")
+                display_metric("Average sale price", f"Monthly average sale price.", asin, region, avg_sale_price_data,
+                               "bar", "year & month", "average sale price")
+                display_metric("OOS days", f"Monthly count of Out of Stock days.", asin, region, oos_days_data,
+                               "bar", "year & month", "total Out of Stock days")
 
     def units_sold(self, asin, region, year_filter):
         return self.query_data(0, asin, region, year_filter)

@@ -111,7 +111,8 @@ def logout():
 
 
 def sales_predictor():
-    st.header("Sales Predictor")
+    st.title("Sales Predictor")
+    st.write("Predictions are based on the analysis of each ASIN & Region historical data.")
 
     asin = st.text_input("Enter ASIN:", "").strip().upper()
     region = st.selectbox("Select a region:", ["EU", "US", "UK", "JP"], index=None, placeholder="...")
@@ -165,12 +166,24 @@ def predictor(asin, region):
 def render_predictions(df, asin, region):
     st.write("")
     st.write("")
-    st.subheader(f"Forecast for {asin} / {region}")
-    st.write("")
-    st.write(df.to_html(index=False), unsafe_allow_html=True)
-    st.write("")
-    fig = px.line(df, x='Date', y='Units')
-    st.plotly_chart(fig)
+
+    with st.container():
+        st.write("")
+        st.write("---")
+        st.write(f"### Forecast for **{asin}** / **{region}**")
+        st.write("")
+
+        df_pivot = df.T
+        df_pivot.columns = df_pivot.iloc[0]
+        df_pivot = df_pivot.drop(df_pivot.index[0])
+
+        st.dataframe(df_pivot, use_container_width=True)
+
+        st.write("")
+
+        fig = px.line(df, x='Date', y='Units')
+        fig.update_traces(textposition='top center')
+        st.plotly_chart(fig, use_container_width=True)
 
 
 def analytics():
@@ -181,9 +194,9 @@ def analytics():
 
     cases = {
         "select one option": "",
-        "categories analytics": CategoriesPerRegionCase,
-        "brands analytics": BrandsPerRegionCase,
-        "ASIN analytics": AsinRegionCase,
+        "Categories overview": CategoriesPerRegionCase,
+        "Brands overview": BrandsPerRegionCase,
+        "ASIN performance" : AsinRegionCase,
     }
 
     case_choice = st.sidebar.selectbox("Click below to select a report", list(cases.keys()), index=0)
