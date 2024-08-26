@@ -17,7 +17,7 @@ def filters_selection():
 
 
 def display_metric(subheader, description, month, year, data, viz_type, x_axis, y_axis):
-    st.subheader(subheader)
+    st.write(f"#### {subheader}")
 
     if data is not None:
         st.write("")
@@ -63,6 +63,7 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
             year_month = year + month
 
             st.title(f"Categories overview")
+            st.write("---")
             st.subheader(f"region {region}")
             st.write(f"{month_name} {year}")
             st.write("")
@@ -80,7 +81,7 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
                 display_metric("Units sold", f"Total units sold.",
                                month_name, year, units_sold_data, "bar", "CATEGORY", "units sold")
                 display_metric("Advertisement spends",
-                               f"Percentage of the total net sales spent in paid advertisement.",
+                               f"Percentage of the total net sales spent in paid advertisement. ",
                                month_name, year, ad_spent_data, "bar", "CATEGORY", "% of net sales spent in ad")
 
     def net_sales(self, region, year_month):

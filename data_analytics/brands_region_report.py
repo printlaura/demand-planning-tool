@@ -17,7 +17,7 @@ def filters_selection():
 
 
 def display_metric(subheader, description, month, year, data, viz_type, x_axis, y_axis):
-    st.subheader(subheader)
+    st.write(f"#### {subheader}")
 
     if data is not None:
         if viz_type == "bar":
@@ -66,6 +66,7 @@ class BrandsPerRegionCase(BaseAnalyticsCase):
             year_month = year + month
 
             st.title(f"Brands overview")
+            st.write("---")
             st.subheader(f"region {region}")
             st.write(f"{month_name} {year}")
             st.write("")

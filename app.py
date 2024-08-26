@@ -194,9 +194,9 @@ def analytics():
 
     cases = {
         "select one option": "",
-        "categories analytics": CategoriesPerRegionCase,
-        "brands analytics": BrandsPerRegionCase,
-        "ASIN analytics": AsinRegionCase,
+        "Categories overview": CategoriesPerRegionCase,
+        "Brands overview": BrandsPerRegionCase,
+        "ASIN performance" : AsinRegionCase,
     }
 
     case_choice = st.sidebar.selectbox("Click below to select a report", list(cases.keys()), index=0)
