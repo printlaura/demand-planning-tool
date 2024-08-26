@@ -145,11 +145,11 @@ def predictor(asin, region):
             forecast_data = [{
                 'Date': datetime(year_today + (month_today + m - 1) // 12,
                                  (month_today + m - 1) % 12 + 1, 1).strftime('%B %Y'),
-                'Predicted sales in units': sales
+                'Units': sales
             } for m, sales in enumerate(predictions, start=1)]
 
             df_forecast = pd.DataFrame(forecast_data)
-            render_predictions(df_forecast)
+            render_predictions(df_forecast, asin, region)
 
         else:
             st.error("No data found for the given ASIN and region.")
@@ -159,13 +159,14 @@ def predictor(asin, region):
         st.error("An error occurred during prediction: " + str(e))
 
 
-def render_predictions(df):
+def render_predictions(df, asin, region):
     st.write("")
     st.write("")
+    st.subheader(f"Forecast for {asin} / {region}")
     st.write("")
     st.write(df.to_html(index=False), unsafe_allow_html=True)
     st.write("")
-    fig = px.line(df, x='Date', y='Predicted sales in units', title='Forecast')
+    fig = px.line(df, x='Date', y='Units')
     st.plotly_chart(fig)
 
 
