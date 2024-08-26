@@ -66,3 +66,20 @@ The Demand Planning Tool (DPT) is a Minimum Viable Product (MVP) of a web applic
 
 4. **Analytics:**
    - Choose from available reports to visualize data and gain insights.
+
+### Running Security Audit
+
+To ensure that your Python dependencies are secure, you can use the `pip-audit` tool. This tool checks for known vulnerabilities in your dependencies.
+
+#### Installation
+
+First, install the `pip-audit` tool:
+
+```sh
+pip install pip-audit
+  ```
+
+To automatically upgrade insecure packages to fixed and non-vulnerable versions, run:
+```sh
+pip-audit -r requirements.txt
+  ```
