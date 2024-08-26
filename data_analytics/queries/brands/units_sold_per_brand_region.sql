@@ -10,4 +10,5 @@ select iff(month(date) > 9,
         iff(sum(units_sold) < 0, 0, sum(units_sold)) as "units sold"
 from STREAMLIT_POC.SANDBOX.STOCK_PERFORMANCE_TEST_VIEW
 where region =  '{region}'
+    and year_month = '{year_month}'
 group by brand, region, year_month

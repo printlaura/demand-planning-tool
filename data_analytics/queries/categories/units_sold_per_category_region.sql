@@ -23,6 +23,7 @@ from
     left join category b
     on a.asin = b.asin
     where region = '{region}'
+        and year_month = '{year_month}'
         and b.category is not null
 )
 group by category, region, year_month
