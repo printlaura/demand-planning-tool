@@ -1,7 +1,7 @@
 # Demand Planning Tool (DPT)
 
 ### Overview
-The Demand Planning Tool (DPT) is a Minimum Viable Product (MVP) of a web application that aims to provide sales predictions and data visualization capabilities. DPT allows non-technical users to visualize sales analytics in order to make informed decisions.
+The Demand Planning Tool (DPT) is a Minimum Viable Product (MVP) of a web application that aims to provide sales predictions and data visualization capabilities. DPT is developed as an internal tool that allows non-technical users to visualize sales analytics in order to make informed decisions for their company.
 
 ### Features
 1. **Sales Predictor:**

@@ -28,6 +28,10 @@ def sanitize_input(input):
     return re.fullmatch(r'^[A-Za-z0-9_]{8,24}$', input) is not None
 
 
+def sanitize_asin(asin):
+    return re.fullmatch(r'^[A-Z0-9_]{10,12}$', asin) is not None
+
+
 def user_login():
     st.title(" log in to DPT")
 
@@ -57,6 +61,7 @@ def user_login():
                 except Exception as e:
                     st.error("Login failed. Either user name or password are incorrect.")
                     logging.error("An error occurred: %s", str(e))
+
 
 def page_navigation():
     current_page = st.session_state.get("current_page", "Home")
@@ -113,13 +118,13 @@ def logout():
 
 def sales_predictor():
     st.title("Sales Predictor")
-    st.write("Predictions are based on the analysis of each ASIN & Region historical data.")
+    st.write("Predictions are based on the analysis of historical data for each ASIN & Region.")
 
     asin = st.text_input("Enter ASIN:", "").strip().upper()
     region = st.selectbox("Select a region:", ["EU", "US", "UK", "JP"], index=None, placeholder="...")
 
     if st.button("Get Forecast"):
-        if not sanitize_input(asin) or not region:
+        if not sanitize_asin(asin) or not region:
             st.error("Please enter valid ASIN and region")
             return
 
@@ -197,7 +202,7 @@ def analytics():
         "select one option": "",
         "Categories overview": CategoriesPerRegionCase,
         "Brands overview": BrandsPerRegionCase,
-        "ASIN performance" : AsinRegionCase,
+        "ASIN performance": AsinRegionCase,
     }
 
     case_choice = st.sidebar.selectbox("Click below to select a report", list(cases.keys()), index=0)
