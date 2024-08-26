@@ -169,12 +169,17 @@ def render_predictions(df, asin, region):
 
     with st.container():
         st.write("")
+        st.write("---")
         st.write(f"### Forecast for **{asin}** / **{region}**")
+        st.write("")
 
-        st.write(df.to_html(index=False), unsafe_allow_html=True)
+        df_pivot = df.T
+        df_pivot.columns = df_pivot.iloc[0]
+        df_pivot = df_pivot.drop(df_pivot.index[0])
+
+        st.dataframe(df_pivot, use_container_width=True)
 
         st.write("")
-        st.write("---")
 
         fig = px.line(df, x='Date', y='Units')
         fig.update_traces(textposition='top center')
