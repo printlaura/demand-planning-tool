@@ -5,7 +5,7 @@ oos_data as
     select iff(month(date) > 9,
             cast(month(date) as varchar) || '/' || cast(year(date) as varchar) ,
             '0' || cast(month(date) as varchar) || '/' || cast(year(date) as varchar)
-        ) as year_month,
+        ) as "year & month",
             asin,
             brand,
             region,
@@ -16,6 +16,6 @@ oos_data as
     {year_filter} -- pass year condition dynamically from python input
 )
 
-select year_month, asin, brand, region, sum(oos) as "total Out of Stock days"
+select "year & month", asin, brand, region, sum(oos) as "total Out of Stock days"
 from oos_data
-group by brand, asin, region, year_month
+group by brand, asin, region, "year & month"

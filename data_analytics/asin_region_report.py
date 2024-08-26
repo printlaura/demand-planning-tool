@@ -1,6 +1,7 @@
 import streamlit as st
 import re
 import plotly.express as px
+import plotly.graph_objects as go
 import pandas as pd
 from data_analytics.base_case import BaseAnalyticsCase
 
@@ -25,13 +26,28 @@ def display_metric(subheader, description, asin, region, data, viz_type, x_axis,
         return None
 
     if data is not None:
+        if viz_type == "line":
+            data['date_order'] = pd.to_datetime(data[x_axis], format='%m/%Y')
+            data = data.sort_values(by='date_order')
+
+            fig = px.line(data, x=x_axis, y=y_axis, text=y_axis)
+            fig.update_traces(textposition='top center')
+
+            st.plotly_chart(fig)
+
+            st.write("")
+            st.write("")
+
         if viz_type == "bar":
             data['date_order'] = pd.to_datetime(data[x_axis], format='%m/%Y')
             data = data.sort_values(by='date_order')
+
             fig = px.bar(data, x=x_axis, y=y_axis, text=y_axis, color=x_axis)
-            fig.update_layout(width=1000, height=550, showlegend=False, xaxis_title="", yaxis_title=f"{y_axis}")
+            fig.update_layout(width=1000, height=550, showlegend=False)
             fig.update_traces(width=0.7, textposition='outside')
+
             st.plotly_chart(fig)
+
             st.write("")
             st.write("")
     else:
@@ -85,8 +101,8 @@ class AsinRegionCase(BaseAnalyticsCase):
                                asin,
                                region,
                                units_sold_data,
-                               "bar",
-                               "YEAR_MONTH",
+                               "line",
+                               "year & month",
                                "units sold"
                                )
                 display_metric("Net sales",
@@ -94,8 +110,8 @@ class AsinRegionCase(BaseAnalyticsCase):
                                asin,
                                region,
                                net_sales_data,
-                               "bar",
-                               "YEAR_MONTH",
+                               "line",
+                               "year & month",
                                "net sales in EUR"
                                )
                 display_metric("Average sale price",
@@ -104,7 +120,7 @@ class AsinRegionCase(BaseAnalyticsCase):
                                region,
                                avg_sale_price_data,
                                "bar",
-                               "YEAR_MONTH",
+                               "year & month",
                                "average sale price"
                                )
                 display_metric("OOS days",
@@ -113,7 +129,7 @@ class AsinRegionCase(BaseAnalyticsCase):
                                region,
                                oos_days_data,
                                "bar",
-                               "YEAR_MONTH",
+                               "year & month",
                                "total Out of Stock days"
                                )
 
