@@ -18,10 +18,14 @@ st.set_page_config(page_title="Demand Plan Tool", layout="wide")
 
 
 def main():
-    if "logged_in" not in st.session_state or st.session_state["logged_in"] is False:
-        user_login()
-    else:
-        page_navigation()
+    try:
+        if "logged_in" not in st.session_state or st.session_state["logged_in"] is False:
+            user_login()
+        else:
+            page_navigation()
+    except Exception as e:
+        st.error("Error.")
+        st.warning("Try refreshing the page.")
 
 
 def sanitize_input(input):
