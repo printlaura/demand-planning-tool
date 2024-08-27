@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 from unittest.mock import patch, mock_open, MagicMock
-from sales_data_preprocessor import SalesDataPreprocessor
+from forecasting.sales_data_preprocessor import SalesDataPreprocessor
 
 
 @pytest.fixture

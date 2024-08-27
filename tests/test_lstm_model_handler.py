@@ -1,34 +1,37 @@
 import pytest
 import numpy as np
 import pandas as pd
-from unittest.mock import Mock, patch
-from lstm_model_handler import LSTMModelHandler
+from unittest.mock import Mock, patch, mock_open
+from forecasting.lstm_model_handler import LSTMModelHandler
 
 
 @pytest.fixture
 def lstm_model_handler():
+    with patch('forecasting.lstm_model_handler.load_model') as mock_load_model, \
+            patch('builtins.open', mock_open()) as mock_file, \
+            patch('pickle.load') as mock_pickle_load:
 
-    with patch('tensorflow.keras.models.load_model', return_value=Mock(name='model_mock')) as mock_model:
-        model_mock = mock_model.return_value
+        model_mock = Mock(name='model_mock')
         model_mock.predict.return_value = np.array([[1.0]])
+        mock_load_model.return_value = model_mock
 
-        with patch('pickle.load', return_value=Mock(name='scaler_mock')) as mock_scaler:
-            scaler_mock = mock_scaler.return_value
-            scaler_mock.transform.side_effect = lambda x: x
-            scaler_mock.inverse_transform.side_effect = lambda x: x
+        # Mock scaler
+        scaler_mock = Mock(name='scaler_mock')
+        scaler_mock.transform.side_effect = lambda x: x
+        scaler_mock.inverse_transform.side_effect = lambda x: x
+        mock_pickle_load.return_value = scaler_mock
 
-            handler = LSTMModelHandler()
+        handler = LSTMModelHandler()
 
-            for i in range(6):
-                handler.models.append(model_mock)
-                handler.scalers_price.append(scaler_mock)
-                handler.scalers_units_sold.append(scaler_mock)
+        for _ in range(6):
+            handler.models.append(model_mock)
+            handler.scalers_price.append(scaler_mock)
+            handler.scalers_units_sold.append(scaler_mock)
 
-            yield handler
+        yield handler
 
 
 def test_process_input(lstm_model_handler):
-
     df = pd.DataFrame({
         'PRICE': [10, 20, 20, 30, 20, 20],
         'UNITS_SOLD': [1, 2, 3, 4, 5, 6]
@@ -40,7 +43,6 @@ def test_process_input(lstm_model_handler):
 
 
 def test_predict(lstm_model_handler):
-
     extra_columns = [
         "CATEGORY_Apparel", "CATEGORY_Art Supplies, Books & Music", "CATEGORY_Beauty & Wellness",
         "CATEGORY_Electronics Others", "CATEGORY_Gadgets & Tech", "CATEGORY_Hardware",
