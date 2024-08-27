@@ -26,20 +26,19 @@ class TestCategoriesPerRegionCase(unittest.TestCase):
 
     @patch('data_analytics.categories_region_report.filters_selection', return_value=("US", "2024", "05"))
     @patch('streamlit.sidebar.button', return_value=True)
-    @patch('streamlit.title')
     @patch('streamlit.subheader')
-    @patch('streamlit.write')
+    @patch('streamlit.title')
+    @patch('streamlit.markdown')
     @patch('streamlit.error')
     @patch('streamlit.plotly_chart')
-    def test_render_with_valid_filters(self, mock_plotly_chart, mock_error, mock_write, mock_subheader, mock_title,
+    def test_render_with_valid_filters(self, mock_plotly_chart, mock_error, mock_markdown, mock_title, mock_subheader,
                                        mock_button, mock_filters_selection):
         self.case.units_sold = MagicMock(return_value=self.df_units_sold)
         self.case.perc_of_sales_spent_in_ad = MagicMock(return_value=self.df_ad_spent)
 
         self.case.render()
 
-        mock_title.assert_called_once_with("Categories overview")
-        mock_write.assert_any_call("May 2024")
+        mock_title.assert_any_call("US / May 2024")
         self.case.units_sold.assert_called_once_with("US", "202405")
         self.case.perc_of_sales_spent_in_ad.assert_called_once_with("US", "202405")
         mock_plotly_chart.assert_called()
