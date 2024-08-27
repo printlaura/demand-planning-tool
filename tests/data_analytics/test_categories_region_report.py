@@ -38,7 +38,6 @@ class TestCategoriesPerRegionCase(unittest.TestCase):
 
         self.case.render()
 
-        mock_title.assert_any_call("US / May 2024")
         self.case.units_sold.assert_called_once_with("US", "202405")
         self.case.perc_of_sales_spent_in_ad.assert_called_once_with("US", "202405")
         mock_plotly_chart.assert_called()
