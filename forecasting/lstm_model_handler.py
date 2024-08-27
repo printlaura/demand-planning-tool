@@ -26,11 +26,11 @@ class LSTMModelHandler:
         self.scalers_units_sold = []
 
         for i in range(1, 7):
-            model = load_model(f'models/model_rf_{i}.h5', compile=True, custom_objects={'LSTM': CustomLSTM})
+            model = load_model(f'forecasting/models/model_rf_{i}.h5', compile=True, custom_objects={'LSTM': CustomLSTM})
             self.models.append(model)
-            with open(f'scalers/price/scaler_price_rf_{i}.pkl', 'rb') as f:
+            with open(f'forecasting/scalers/price/scaler_price_rf_{i}.pkl', 'rb') as f:
                 self.scalers_price.append(pickle.load(f))
-            with open(f'scalers/units_sold/scaler_units_sold_rf_{i}.pkl', 'rb') as f:
+            with open(f'forecasting/scalers/units_sold/scaler_units_sold_rf_{i}.pkl', 'rb') as f:
                 self.scalers_units_sold.append(pickle.load(f))
 
     def process_input(self, df):

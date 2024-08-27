@@ -23,7 +23,7 @@ def display_metric(subheader, description, asin, region, data, viz_type, x_axis,
         st.warning("This item has never been Out of Stock.")
         return None
 
-    if data is not None:
+    if data is not None and not data[y_axis].isnull().all():
         st.write(description)
 
         data['date_order'] = pd.to_datetime(data[x_axis], format='%m/%Y')
