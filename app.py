@@ -8,8 +8,8 @@ import re
 
 from snowflake_query_executor import SnowflakeQueryExecutor
 from db_connector import get_snowflake_connection
-from sales_data_preprocessor import SalesDataPreprocessor
-from lstm_model_handler import LSTMModelHandler
+from forecasting.sales_data_preprocessor import SalesDataPreprocessor
+from forecasting.lstm_model_handler import LSTMModelHandler
 from data_analytics.categories_region_report import CategoriesPerRegionCase
 from data_analytics.brands_region_report import BrandsPerRegionCase
 from data_analytics.asin_region_report import AsinRegionCase
@@ -206,9 +206,11 @@ def predictor(asin, region):
         else:
             st.error("No data found for the given ASIN and region.")
     except ValueError as e:
-        st.error(str(e))
+        st.error("Error.")
+        logging.error(f"Value error: {str(e)}")
     except Exception as e:
-        st.error("An error occurred during prediction: " + str(e))
+        st.error("An error occurred during prediction.")
+        logging.error(f"An error occurred during prediction: {str(e)}.")
 
 
 def render_predictions(df, asin, region):
