@@ -59,6 +59,7 @@ def display_metric(subheader, description, asin, region, data, viz_type, x_axis,
 
     st.write("")
     st.write("")
+    st.write("")
 
 
 def validate_asin(asin):
