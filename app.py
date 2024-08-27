@@ -79,9 +79,8 @@ def page_navigation():
 def analytics_and_forecasting_sidebar():
     if st.sidebar.button("Log out"):
         logout()
-        st.sidebar.write("---")
 
-    st.sidebar.write("")
+    st.sidebar.write("---")
     st.sidebar.write("")
     st.sidebar.write("")
 
@@ -94,9 +93,6 @@ def analytics_and_forecasting_sidebar():
     if st.sidebar.button(f"Go to {toggle_page}"):
         st.session_state["current_page"] = toggle_page
         st.rerun()
-
-    st.sidebar.write("")
-    st.sidebar.write("")
 
 
 def home():
