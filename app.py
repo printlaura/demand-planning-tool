@@ -37,11 +37,16 @@ def sanitize_asin(asin):
 
 
 def user_login():
-    st.title(" log in to DPT")
+
+    st.markdown(f"<h1 style='text-align: right; margin-bottom: 80px; margin-top: 50px; "
+                f"font-size: 100px'>Demand Plan Tool</h1>", unsafe_allow_html=True)
 
     with st.form("Login Form"):
         username = st.text_input("user name")
+        st.write("")
         password = st.text_input("password", type="password")
+        st.write("")
+        st.write("")
         submitted = st.form_submit_button("log in")
 
         if submitted:
