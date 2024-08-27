@@ -100,17 +100,42 @@ def analytics_and_forecasting_sidebar():
 
 
 def home():
-    st.title(f"welcome, {st.session_state['sf_user']}.")
+    username = st.session_state['sf_user']
 
-    if st.button("Go to Forecasting"):
-        st.session_state["current_page"] = "Forecasting"
-        st.rerun()
-    if st.button("Go to Analytics"):
-        st.session_state["current_page"] = "Analytics"
-        st.rerun()
-    if st.button("Log out"):
-        logout()
-        st.rerun()
+    # CSS to make buttons bigger
+    st.markdown("""
+         <style>
+         .stButton button {
+             font-size: 20px;
+             padding: 30px 45px;
+         }
+         </style>
+         """, unsafe_allow_html=True)
+
+    col_top_left, col_top_right = st.columns([1, 4])
+
+    with col_top_left:
+        if st.button("Log out"):
+            logout()
+            st.rerun()
+
+    st.markdown(f"<h1 style='text-align: right;'>Welcome, {username}.</h1>", unsafe_allow_html=True)
+
+    st.write("---")
+    st.write("")
+    st.write("")
+
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+
+    with col2:
+        if st.button("Go to Forecasting"):
+            st.session_state["current_page"] = "Forecasting"
+            st.rerun()
+
+    with col3:
+        if st.button("Go to Analytics"):
+            st.session_state["current_page"] = "Analytics"
+            st.rerun()
 
 
 def logout():
