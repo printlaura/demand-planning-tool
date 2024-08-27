@@ -9,7 +9,7 @@ class SalesDataPreprocessor:
         self.df = df
 
     def load_data(self, conn):
-        with open('queries/sales_data_for_prediction.sql', 'r') as file:
+        with open('forecasting/queries/sales_data_for_prediction.sql', 'r') as file:
             query = file.read().format(asin=self.asin, region=self.region)
 
         self.df = self.sf_query_executor.execute_query(query, conn)
