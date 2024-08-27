@@ -1,7 +1,7 @@
 import os
-from dotenv import main
+from dotenv import load_dotenv
 
-main.load_dotenv()
+load_dotenv()
 
 SNOWFLAKE_ACCOUNT = os.getenv('SNOWFLAKE_ACCOUNT')
 SNOWFLAKE_WAREHOUSE = os.getenv('SNOWFLAKE_WAREHOUSE')
