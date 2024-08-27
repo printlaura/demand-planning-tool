@@ -12,29 +12,33 @@ class TestCategoriesPerRegionCase(unittest.TestCase):
         self.case = CategoriesPerRegionCase(self.mock_connection)
 
         self.df_units_sold = pd.DataFrame({
+            'YEAR_MONTH': '202405',
+            'REGION': 'US',
             'CATEGORY': ['Electronics', 'Books'],
-            'units_sold': [100, 150]
+            'units sold': [100, 150]
         })
         self.df_ad_spent = pd.DataFrame({
+            'YEAR_MONTH': '202405',
+            'REGION': 'US',
             'CATEGORY': ['Electronics', 'Books'],
             '% of net sales spent in ad': [20, 25]
         })
 
-
     @patch('data_analytics.categories_region_report.filters_selection', return_value=("US", "2024", "05"))
     @patch('streamlit.sidebar.button', return_value=True)
     @patch('streamlit.title')
+    @patch('streamlit.subheader')
     @patch('streamlit.write')
     @patch('streamlit.error')
     @patch('streamlit.plotly_chart')
-    def test_render_with_valid_filters(self, mock_plotly_chart, mock_error, mock_write, mock_title, mock_button,
-                                       mock_filters_selection):
+    def test_render_with_valid_filters(self, mock_plotly_chart, mock_error, mock_write, mock_subheader, mock_title,
+                                       mock_button, mock_filters_selection):
         self.case.units_sold = MagicMock(return_value=self.df_units_sold)
         self.case.perc_of_sales_spent_in_ad = MagicMock(return_value=self.df_ad_spent)
 
         self.case.render()
 
-        mock_title.assert_called_once_with("Categories - US")
+        mock_title.assert_called_once_with("Categories overview")
         mock_write.assert_any_call("May 2024")
         self.case.units_sold.assert_called_once_with("US", "202405")
         self.case.perc_of_sales_spent_in_ad.assert_called_once_with("US", "202405")
@@ -60,4 +64,4 @@ class TestCategoriesPerRegionCase(unittest.TestCase):
     @patch('streamlit.error')
     def test_render_with_future_date_selection(self, mock_error, mock_button, mock_filters_selection):
         self.case.render()
-        mock_error.assert_called_with("The selected month is invalid. Please select a previous date.")
+        mock_error.assert_called_with("The selected date is invalid. Please select a previous date.")

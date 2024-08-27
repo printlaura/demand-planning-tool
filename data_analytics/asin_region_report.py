@@ -1,7 +1,6 @@
 import streamlit as st
 import re
 import plotly.express as px
-import plotly.graph_objects as go
 import pandas as pd
 from data_analytics.base_case import BaseAnalyticsCase
 
@@ -105,13 +104,13 @@ class AsinRegionCase(BaseAnalyticsCase):
 
                 st.empty()
 
-                display_metric("Units sold", f"Monthly units sold.", asin, region, units_sold_data, "line",
+                display_metric("Units sold", "Monthly units sold.", asin, region, units_sold_data, "line",
                                "year & month", "units sold")
-                display_metric("Net sales", f"Monthly net sales.", asin, region, net_sales_data, "line",
+                display_metric("Net sales", "Monthly net sales.", asin, region, net_sales_data, "line",
                                "year & month", "net sales in EUR")
-                display_metric("Average sale price", f"Monthly average sale price.", asin, region, avg_sale_price_data,
+                display_metric("Average sale price", "Monthly average sale price.", asin, region, avg_sale_price_data,
                                "bar", "year & month", "average sale price")
-                display_metric("OOS days", f"Monthly count of Out of Stock days.", asin, region, oos_days_data,
+                display_metric("OOS days", "Monthly count of Out of Stock days.", asin, region, oos_days_data,
                                "bar", "year & month", "total Out of Stock days")
 
     def units_sold(self, asin, region, year_filter):

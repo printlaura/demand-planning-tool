@@ -3,7 +3,6 @@ import streamlit as st
 import plotly.express as px
 import calendar
 from datetime import datetime
-import pandas as pd
 
 
 def filters_selection():
