@@ -55,7 +55,7 @@ def display_metric(subheader, description, asin, region, data, viz_type, x_axis,
             st.write("")
             st.write("")
     else:
-        st.write(f"No {subheader} data available for {asin} / {region}.")
+        st.warning(f"There is no {subheader} data available for {asin} / {region}.")
 
     st.write("")
     st.write("")
@@ -87,9 +87,10 @@ class AsinRegionCase(BaseAnalyticsCase):
                 st.sidebar.error("Invalid ASIN.")
                 return None
 
-            st.header(f"ASIN performance")
+            st.markdown(f"<h1 style='text-align: right; font-size: 50px; color: #983352;'>ASIN performance</h1>",
+                        unsafe_allow_html=True)
             st.write("---")
-            st.subheader(f"{asin} / {region}")
+            st.title(f"{asin} / {region}")
             st.write("")
             st.write("")
 

@@ -49,10 +49,10 @@ def display_metric(subheader, description, month, year, data, viz_type, x_axis, 
             st.write("")
             st.write("")
     else:
-        st.write(f"No {subheader} data available for {month} {year}.")
-
-    st.write("")
-    st.write("")
+        st.warning(f"There is no {subheader} data available for {month} {year}.")
+        st.write("---")
+        st.write("")
+        st.write("")
 
 
 class BrandsPerRegionCase(BaseAnalyticsCase):
@@ -77,10 +77,10 @@ class BrandsPerRegionCase(BaseAnalyticsCase):
             month_name = calendar.month_name[int(month)]
             year_month = year + month
 
-            st.title(f"Brands overview")
+            st.markdown(f"<h1 style='text-align: right; font-size: 50px; color: #983352;'>BRANDS overview</h1>",
+                        unsafe_allow_html=True)
             st.write("---")
-            st.subheader(f"region {region}")
-            st.write(f"{month_name} {year}")
+            st.title(f"{region} / {month_name} {year}")
             st.write("")
             st.write("")
 

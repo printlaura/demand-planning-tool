@@ -91,7 +91,6 @@ def analytics_and_forecasting_sidebar():
 
     st.sidebar.write("---")
     st.sidebar.write("")
-    st.sidebar.write("")
 
     if st.sidebar.button("Home"):
         st.session_state["current_page"] = "Home"
@@ -107,7 +106,7 @@ def analytics_and_forecasting_sidebar():
 def home():
     username = st.session_state['sf_user']
 
-    # CSS to make buttons bigger
+    # styling to make buttons bigger
     st.markdown("""
          <style>
          .stButton button {
@@ -124,7 +123,7 @@ def home():
             logout()
             st.rerun()
 
-    st.markdown(f"<h1 style='text-align: right;'>Welcome, {username}.</h1>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='text-align: right; color: #983352;'>Welcome, {username}.</h1>", unsafe_allow_html=True)
 
     st.write("---")
     st.write("")
@@ -154,11 +153,18 @@ def logout():
 
 
 def sales_predictor():
-    st.title("Sales Predictor")
-    st.write("Predictions are based on the analysis of historical data for each ASIN & Region.")
+    st.markdown(f"<h1 style='text-align: right; font-size: 50px; color: #983352;'>Sales Predictor</h1>",
+                unsafe_allow_html=True)
+    st.write("---")
+    st.markdown(f"<p style='font-size: 20px'>Predictions are based on the analysis of historical data for each ASIN & Region. </p>",
+                unsafe_allow_html=True)
+    #st.title("Predictions are based on the analysis of historical data for each ASIN & Region.")
+    st.write("")
+    st.write("")
 
     asin = st.text_input("Enter ASIN:", "").strip().upper()
     region = st.selectbox("Select a region:", ["EU", "US", "UK", "JP"], index=None, placeholder="...")
+    st.write("")
 
     if st.button("Get Forecast"):
         if not sanitize_asin(asin) or not region:
