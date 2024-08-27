@@ -106,13 +106,13 @@ class AsinRegionCase(BaseAnalyticsCase):
                 st.empty()
 
                 display_metric("Units sold", "Monthly units sold.", asin, region, units_sold_data, "line",
-                               "year & month", "units sold")
+                               "month & year", "units sold")
                 display_metric("Net sales", "Monthly net sales.", asin, region, net_sales_data, "line",
-                               "year & month", "net sales in EUR")
+                               "month & year", "net sales in EUR")
                 display_metric("Average sale price", "Monthly average sale price.", asin, region, avg_sale_price_data,
-                               "bar", "year & month", "average sale price")
+                               "bar", "month & year", "average sale price")
                 display_metric("OOS days", "Monthly count of Out of Stock days.", asin, region, oos_days_data,
-                               "bar", "year & month", "total Out of Stock days")
+                               "bar", "month & year", "total Out of Stock days")
 
     def units_sold(self, asin, region, year_filter):
         return self.query_data(0, asin, region, year_filter)

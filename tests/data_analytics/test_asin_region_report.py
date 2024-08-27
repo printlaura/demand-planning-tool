@@ -8,7 +8,7 @@ def mock_visualization_data():
     return pd.DataFrame({
         "ASIN": "B07PGL2ZSL",
         "REGION": "EU",
-        "year & month": ["01/2023", "02/2023"],
+        "month & year": ["01/2023", "02/2023"],
         "units sold": [100, 150],
         "net sales in EUR": [2000.50, 3500.75],
         "average sale price": [20.05, 22.75],
@@ -28,14 +28,14 @@ class TestAsinRegionCase(unittest.TestCase):
     @patch('streamlit.write')
     def test_display_metric(self, mock_write, mock_warning, mock_expander, mock_plotly_chart):
         display_metric("Units sold", "Monthly units sold.", "Test ASIN", "Test Region", self.mock_data, "line",
-                       "year & month", "units sold")
+                       "month & year", "units sold")
 
         mock_write.assert_called()
         mock_expander.assert_called_once()
         mock_plotly_chart.assert_called_once()
 
         display_metric("Average sale price", "Monthly average sale price.", "Test ASIN", "Test Region", self.mock_data,
-                       "bar", "year & month", "average sale price")
+                       "bar", "month & year", "average sale price")
 
         mock_expander.assert_called()
         mock_write.assert_called()
