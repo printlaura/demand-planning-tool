@@ -5,7 +5,7 @@ category as
     from STREAMLIT_POC.SANDBOX.DIM_PRODUCT_VIEW
 )
 
-select year_month, category, region, round(sum(net_sales)) as net_sales_in_eur
+select year_month, category, region, round(sum(net_sales)) as "net sales in EUR"
 from
 (
     select iff(month(date) > 9,

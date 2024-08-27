@@ -88,12 +88,12 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
 
                 st.empty()
 
-                display_metric("Net sales", f"Share of the company's total net sales per category.",
-                               month_name, year, net_sales_data, "pie", "CATEGORY", "NET_SALES_IN_EUR")
-                display_metric("Units sold", f"Total units sold.",
+                display_metric("Net sales", "Share of the company's total net sales per category.",
+                               month_name, year, net_sales_data, "pie", "CATEGORY", "net sales in EUR")
+                display_metric("Units sold", "Total units sold.",
                                month_name, year, units_sold_data, "bar", "CATEGORY", "units sold")
                 display_metric("Advertisement spends",
-                               f"Percentage of the total net sales spent in paid advertisement. ",
+                               "Percentage of the total net sales spent in paid advertisement. ",
                                month_name, year, ad_spent_data, "bar", "CATEGORY", "% of net sales spent in ad")
 
     def net_sales(self, region, year_month):
