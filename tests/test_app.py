@@ -70,7 +70,7 @@ def test_predictor_with_valid_data():
 
 
 def test_analytics_selection_valid():
-    with patch('app.st.sidebar.selectbox', return_value="ASIN analytics"), \
+    with patch('app.st.sidebar.selectbox', return_value="ASIN performance"), \
             patch('app.AsinRegionCase.render'), \
             patch.dict('app.st.session_state', {'sf_connection': MagicMock()}, clear=True):
         app.analytics()

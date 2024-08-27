@@ -117,7 +117,7 @@ class TestAsinRegionCase(unittest.TestCase):
 
     @patch('data_analytics.asin_region_report.filters_selection', return_value=("B07PGL2ZSL", "EU", ["2023", "2024"]))
     @patch('streamlit.sidebar.button', return_value=True)
-    @patch('streamlit.title')
+    @patch('streamlit.header')
     @patch('streamlit.subheader')
     @patch('streamlit.write')
     @patch('streamlit.spinner')
@@ -126,21 +126,22 @@ class TestAsinRegionCase(unittest.TestCase):
     @patch('data_analytics.asin_region_report.AsinRegionCase.avg_sale_price')
     @patch('data_analytics.asin_region_report.AsinRegionCase.oos_days')
     def test_render_with_valid_filters(self, mock_oos_days, mock_avg_sale_price, mock_net_sales, mock_units_sold,
-                                       mock_spinner, mock_write, mock_subheader, mock_title, mock_button,
+                                       mock_spinner, mock_write, mock_subheader, mock_header, mock_button,
                                        mock_filters_selection):
-        mock_oos_days.return_value = pd.DataFrame([{"YEAR_MONTH": "202301", "total Out of Stock days": 0}])
-        mock_avg_sale_price.return_value = pd.DataFrame([{"YEAR_MONTH": "202301", "average sale price": 20.0}])
-        mock_net_sales.return_value = pd.DataFrame([{"YEAR_MONTH": "202301", "net sales in EUR": 1000.0}])
-        mock_units_sold.return_value = pd.DataFrame([{"YEAR_MONTH": "202301", "units sold": 50}])
+        mock_oos_days.return_value = pd.DataFrame([{"year & month": "01/2023", "ASIN": "Test ASIN",
+                                                    "REGION": "Test Region", "total Out of Stock days": 0}])
+        mock_avg_sale_price.return_value = pd.DataFrame([{"year & month": "01/2023","ASIN": "Test ASIN",
+                                                    "REGION": "Test Region", "average sale price": 20.0}])
+        mock_net_sales.return_value = pd.DataFrame([{"year & month": "01/2023", "ASIN": "Test ASIN",
+                                                    "REGION": "Test Region", "net sales in EUR": 1000.0}])
+        mock_units_sold.return_value = pd.DataFrame([{"year & month": "01/2023", "ASIN": "Test ASIN",
+                                                    "REGION": "Test Region", "units sold": 50}])
 
         case = AsinRegionCase(self.mock_connection)
         case.render()
 
-        mock_title.assert_called_once_with("ASIN")
-        mock_subheader.assert_any_call("Units sold")
-        mock_subheader.assert_any_call("Net sales")
-        mock_subheader.assert_any_call("Average sale price")
-        mock_subheader.assert_any_call("Out of Stock days")
+        mock_header.assert_called_once_with("ASIN performance")
+        mock_subheader.assert_any_call("Test ASIN / Test Region")
         mock_units_sold.assert_called_once()
         mock_net_sales.assert_called_once()
         mock_avg_sale_price.assert_called_once()
@@ -151,13 +152,15 @@ class TestAsinRegionCase(unittest.TestCase):
         with patch('streamlit.subheader') as mock_subheader, patch('streamlit.write') as mock_write, \
                 patch('streamlit.bar_chart') as mock_bar_chart:
 
-            display_metric("Units sold", "Test ASIN - Test Region", None, "bar", "YEAR_MONTH", "units sold")
-            mock_write.assert_called_with("No Units sold data available for Test ASIN - Test Region.")
+            display_metric("Units sold", "Monthly units sold.", "Test ASIN", "Test Region", None, "bar", "YEAR_MONTH",
+                           "units sold")
+            mock_write.assert_called_with("No Units sold data available for Test ASIN / Test Region.")
             mock_bar_chart.assert_not_called()
 
             mock_write.reset_mock()
 
             data = mock_visualization_data()
-            display_metric("Units sold", "Test ASIN - Test Region", data, "bar", "YEAR_MONTH", "units sold")
+            display_metric("Units sold", "Monthly units sold.", "Test ASIN", "Test Region", data, "bar",
+                           "YEAR_MONTH", "units sold")
             mock_bar_chart.assert_called_once()
-            mock_write.assert_not_called()
+            mock_write.assert_called_with("")
