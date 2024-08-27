@@ -90,7 +90,8 @@ class AsinRegionCase(BaseAnalyticsCase):
             st.markdown(f"<h1 style='text-align: right; font-size: 50px; color: #983352;'>ASIN performance</h1>",
                         unsafe_allow_html=True)
             st.write("---")
-            st.title(f"{asin} / {region}")
+            st.markdown(f"<h3 style='font-size: 40px; color: #9D9191;'>{asin} / {region}</h3>",
+                        unsafe_allow_html=True)
             st.write("")
             st.write("")
 

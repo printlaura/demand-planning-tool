@@ -156,9 +156,8 @@ def sales_predictor():
     st.markdown(f"<h1 style='text-align: right; font-size: 50px; color: #983352;'>Sales Predictor</h1>",
                 unsafe_allow_html=True)
     st.write("---")
-    st.markdown(f"<p style='font-size: 20px'>Predictions are based on the analysis of historical data for each ASIN & Region. </p>",
+    st.markdown(f"<p style='font-size: 20px'>Enter ASIN & region to get sales predictions for the upcoming six months. </p>",
                 unsafe_allow_html=True)
-    #st.title("Predictions are based on the analysis of historical data for each ASIN & Region.")
     st.write("")
     st.write("")
 

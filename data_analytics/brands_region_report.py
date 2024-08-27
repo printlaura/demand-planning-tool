@@ -80,7 +80,8 @@ class BrandsPerRegionCase(BaseAnalyticsCase):
             st.markdown(f"<h1 style='text-align: right; font-size: 50px; color: #983352;'>BRANDS overview</h1>",
                         unsafe_allow_html=True)
             st.write("---")
-            st.title(f"{region} / {month_name} {year}")
+            st.markdown(f"<h3 style='font-size: 40px; color: #9D9191;'>{region} / {month_name} {year}</h3>",
+                        unsafe_allow_html=True)
             st.write("")
             st.write("")
 
