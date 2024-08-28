@@ -56,7 +56,7 @@ The Demand Plan Tool (DPT) is a web application that aims to provide sales predi
     ```
    
 4. **Configure Snowflake Connection:**
-   Add your Snowflake configuration in `db_connector.py`, ensuring your credentials and connection details are correctly set.
+   Add your Snowflake configuration in `db_connector.py`, ensuring your connection details are correctly set.
 
     ```python
     def get_snowflake_connection(user, password):
@@ -69,6 +69,8 @@ The Demand Plan Tool (DPT) is a web application that aims to provide sales predi
             schema='SNOWFLAKE_SCHEMA'
         )
     ```
+   Your user and password credentials are the same ones you will need to log into the application, and will be automatically passed to the snowflake connector once logged in.
+
 
 4. **Run the Application:**
     ```sh
