@@ -58,6 +58,7 @@ class LSTMModelHandler:
         if sequence is None:
             return "Failed to predict. There is no sale price historical data for this ASIN and region."
 
+        # get predictions for 6 months
         for i in range(6):
             model = self.models[i]
             prediction = model.predict(sequence)

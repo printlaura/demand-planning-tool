@@ -15,7 +15,6 @@ def lstm_model_handler():
         model_mock.predict.return_value = np.array([[1.0]])
         mock_load_model.return_value = model_mock
 
-        # Mock scaler
         scaler_mock = Mock(name='scaler_mock')
         scaler_mock.transform.side_effect = lambda x: x
         scaler_mock.inverse_transform.side_effect = lambda x: x

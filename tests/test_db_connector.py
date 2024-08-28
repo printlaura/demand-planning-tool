@@ -3,7 +3,6 @@ from unittest.mock import patch, Mock
 from snowflake.connector.errors import DatabaseError
 from db_connector import get_snowflake_connection
 
-# Example constant parameters for the test
 SNOWFLAKE_USER = 'test_user'
 SNOWFLAKE_PASSWORD = 'test_password'
 SNOWFLAKE_ACCOUNT = 'test_account'

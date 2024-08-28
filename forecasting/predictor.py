@@ -56,6 +56,7 @@ class Predictor:
                     st.error(predictions)
                     return None
 
+                # create df from list of dicts with predicted data
                 forecast_data = [{
                     'Date': datetime(year_today + (month_today + m - 1) // 12,
                                      (month_today + m - 1) % 12 + 1, 1).strftime('%B %Y'),

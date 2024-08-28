@@ -70,6 +70,7 @@ class CategoriesPerRegionCase(BaseAnalyticsCase):
                 st.error("Please select region, year and month.")
                 return
 
+            # check that the user does not select a date that is in the future
             if int(year) == datetime.now().year and int(month) > datetime.now().month:
                 st.error("The selected date is invalid. Please select a previous date.")
                 return

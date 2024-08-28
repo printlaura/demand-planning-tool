@@ -3,7 +3,6 @@ from unittest.mock import patch, MagicMock
 from forecasting.predictor import Predictor
 from datetime import datetime
 import pandas as pd
-import re
 
 
 class TestPredictor(unittest.TestCase):
