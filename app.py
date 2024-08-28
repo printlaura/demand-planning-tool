@@ -1,15 +1,10 @@
 import logging
 
-import pandas as pd
 import streamlit as st
-from datetime import datetime
-import plotly.express as px
 import re
 
-from snowflake_query_executor import SnowflakeQueryExecutor
 from db_connector import get_snowflake_connection
-from forecasting.sales_data_preprocessor import SalesDataPreprocessor
-from forecasting.lstm_model_handler import LSTMModelHandler
+from forecasting.predictor import Predictor
 from data_analytics.categories_region_report import CategoriesPerRegionCase
 from data_analytics.brands_region_report import BrandsPerRegionCase
 from data_analytics.asin_region_report import AsinRegionCase
@@ -31,12 +26,12 @@ def main():
 def sanitize_input(input):
     return re.fullmatch(r'^[A-Za-z0-9_]{8,24}$', input) is not None
 
+
 def sanitize_asin(asin):
     return re.fullmatch(r'^[A-Z0-9_]{10}$', asin) is not None
 
 
 def user_login():
-
     st.markdown(f"<h1 style='text-align: right; margin-bottom: 80px; margin-top: 50px; "
                 f"font-size: 75px'>Demand Plan Tool</h1>", unsafe_allow_html=True)
 
@@ -152,86 +147,12 @@ def logout():
 
 
 def sales_predictor():
-    st.markdown(f"<h1 style='text-align: right; font-size: 50px; color: #983352;'>Sales Predictor</h1>",
-                unsafe_allow_html=True)
-    st.write("---")
-    st.markdown(f"<p style='font-size: 20px'>Enter ASIN & region to get sales predictions for the upcoming six months. </p>",
-                unsafe_allow_html=True)
-    st.write("")
-    st.write("")
+    if "sf_connection" not in st.session_state:
+        st.error("Database connection not found.")
+        return
 
-    asin = st.text_input("Enter ASIN:", "").strip().upper()
-    region = st.selectbox("Select a region:", ["EU", "US", "UK", "JP"], index=None, placeholder="...")
-    st.write("")
-
-    if st.button("Get Forecast"):
-        if not sanitize_asin(asin) or not region:
-            st.error("Please enter valid ASIN and region")
-            return
-
-        with st.spinner("Generating forecast. This might take a few seconds ..."):
-            predictor(asin, region)
-
-
-def predictor(asin, region):
-    month_today = datetime.now().month
-    year_today = datetime.now().year
-
-    try:
-        conn = st.session_state["sf_connection"]
-
-        preprocessor = SalesDataPreprocessor(SnowflakeQueryExecutor, asin=asin, region=region)
-        preprocessor.load_data(conn)
-
-        df_preprocessed = preprocessor.preprocess_data()
-
-        if not df_preprocessed.empty:
-            model_handler = LSTMModelHandler()
-            predictions = model_handler.predict(df_preprocessed)
-
-            if predictions == "Failed to predict. There is no sale price historical data for this ASIN and region.":
-                st.error(predictions)
-                return None
-
-            forecast_data = [{
-                'Date': datetime(year_today + (month_today + m - 1) // 12,
-                                 (month_today + m - 1) % 12 + 1, 1).strftime('%B %Y'),
-                'Units': sales
-            } for m, sales in enumerate(predictions, start=1)]
-
-            df_forecast = pd.DataFrame(forecast_data)
-            render_predictions(df_forecast, asin, region)
-
-        else:
-            st.error("No data found for the given ASIN and region.")
-    except ValueError as e:
-        st.error(f"Failed to get prediction: {str(e)}")
-    except Exception as e:
-        st.error("An error occurred during prediction.")
-        logging.error(f"An error occurred during prediction: {str(e)}.")
-
-
-def render_predictions(df, asin, region):
-    st.write("")
-    st.write("")
-
-    with st.container():
-        st.write("")
-        st.write("---")
-        st.write(f"### Forecast for **{asin}** / **{region}**")
-        st.write("")
-
-        df_pivot = df.T
-        df_pivot.columns = df_pivot.iloc[0]
-        df_pivot = df_pivot.drop(df_pivot.index[0])
-
-        st.dataframe(df_pivot, use_container_width=True)
-
-        st.write("")
-
-        fig = px.line(df, x='Date', y='Units')
-        fig.update_traces(textposition='top center')
-        st.plotly_chart(fig, use_container_width=True)
+    predictor = Predictor(st.session_state["sf_connection"])
+    predictor.render()
 
 
 def analytics():
