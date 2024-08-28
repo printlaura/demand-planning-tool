@@ -44,6 +44,10 @@ def user_login():
         submitted = st.form_submit_button("log in")
 
         if submitted:
+            if not username and not password:
+                st.error("Enter user name and password.")
+                return None
+
             if not sanitize_input(username) or not password:
                 st.error("Invalid username or password.")
                 return None
@@ -64,7 +68,6 @@ def user_login():
                 except Exception as e:
                     st.error("Login failed. Either user name or password are incorrect.")
                     logging.error("An error occurred: %s", str(e))
-
 
 def page_navigation():
     current_page = st.session_state.get("current_page", "Home")
