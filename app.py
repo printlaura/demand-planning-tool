@@ -31,7 +31,6 @@ def main():
 def sanitize_input(input):
     return re.fullmatch(r'^[A-Za-z0-9_]{8,24}$', input) is not None
 
-
 def sanitize_asin(asin):
     return re.fullmatch(r'^[A-Z0-9_]{10,12}$', asin) is not None
 
@@ -44,13 +43,13 @@ def user_login():
     with st.form("Login Form"):
         username = st.text_input("user name")
         st.write("")
-        password = st.text_input("password", type="password")
+        password = st.text_input("password", type="password").strip()
         st.write("")
         st.write("")
         submitted = st.form_submit_button("log in")
 
         if submitted:
-            if not sanitize_input(username) or not sanitize_input(password):
+            if not sanitize_input(username) or not password:
                 st.error("Invalid username or password.")
                 return None
 
