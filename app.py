@@ -132,11 +132,11 @@ def home():
     col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 
     with col2:
-        if st.button("Go to Forecasting"):
+        if st.button("Forecasting"):
             st.session_state["current_page"] = "Forecasting"
             st.rerun()
     with col3:
-        if st.button("Go to Analytics"):
+        if st.button("Analytics"):
             st.session_state["current_page"] = "Analytics"
             st.rerun()
 
