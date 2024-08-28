@@ -38,7 +38,7 @@ def sanitize_asin(asin):
 def user_login():
 
     st.markdown(f"<h1 style='text-align: right; margin-bottom: 80px; margin-top: 50px; "
-                f"font-size: 75px'>Demand Planning Tool</h1>", unsafe_allow_html=True)
+                f"font-size: 75px'>Demand Plan Tool</h1>", unsafe_allow_html=True)
 
     with st.form("Login Form"):
         username = st.text_input("user name")
