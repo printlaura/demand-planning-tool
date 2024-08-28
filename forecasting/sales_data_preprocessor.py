@@ -52,6 +52,8 @@ class SalesDataPreprocessor:
         self.df['PRICE'] = self.df['PRICE'].astype('float32')
 
     def _add_dummy_columns(self):
+        # manually create categorical columns not present in raw dataset
+
         category_columns = [
             "CATEGORY_Apparel", "CATEGORY_Art Supplies, Books & Music", "CATEGORY_Beauty & Wellness",
             "CATEGORY_Electronics Others", "CATEGORY_Gadgets & Tech", "CATEGORY_Hardware",

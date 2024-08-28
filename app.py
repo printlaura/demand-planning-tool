@@ -69,6 +69,7 @@ def user_login():
                     st.error("Login failed. Either user name or password are incorrect.")
                     logging.error("An error occurred: %s", str(e))
 
+
 def page_navigation():
     current_page = st.session_state.get("current_page", "Home")
 
@@ -113,6 +114,7 @@ def home():
          </style>
          """, unsafe_allow_html=True)
 
+    # streamlit columns to align log out button
     col_top_left, col_top_right = st.columns([1, 4])
 
     with col_top_left:
@@ -126,13 +128,13 @@ def home():
     st.write("")
     st.write("")
 
+    # streamlit columns to align pages buttons
     col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 
     with col2:
         if st.button("Go to Forecasting"):
             st.session_state["current_page"] = "Forecasting"
             st.rerun()
-
     with col3:
         if st.button("Go to Analytics"):
             st.session_state["current_page"] = "Analytics"
