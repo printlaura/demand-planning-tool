@@ -3,6 +3,8 @@
 ## Overview
 The Demand Plan Tool (DPT) is a web application that aims to provide sales predictions and data visualization capabilities. DPT is developed as an internal tool that allows non-technical users of an e-commerce aggregator company to visualize sales analytics in order to make informed decisions for their company.
 
+---
+
 ## Features
 1. **Forecasting:**
    - <u>Input</u>: Product ID (ASIN), Region.
@@ -11,6 +13,8 @@ The Demand Plan Tool (DPT) is a web application that aims to provide sales predi
 2. **Data Analytics:**
    - Customizable reports based on historical data from the company's Snowflake database.
    - Accessible insights for understanding of the sales patterns' bigger picture.
+
+---
 
 ## Getting Started
 
@@ -87,12 +91,13 @@ The Demand Plan Tool (DPT) is a web application that aims to provide sales predi
 
 - **Analytics:** Choose from available reports to visualize data and gain insights.
 
+---
 
 ### Running Security Audit
 
 To ensure that your Python dependencies are secure, you can use the `pip-audit` tool. This tool checks for known vulnerabilities in your dependencies.
 
-### Installation
+#### Installation
 
 First, install the `pip-audit` tool:
 
@@ -104,3 +109,13 @@ To automatically upgrade insecure packages to fixed and non-vulnerable versions,
 ```sh
 pip-audit -r requirements.txt
   ```
+
+---
+### Deployment Workflow with Streamlit Cloud
+
+1. **Prerequisite:** An account on Streamlit Community Cloud: [Streamlit Cloud](https://share.streamlit.io/)
+2. **Streamlit Cloud Configuration:** Navigate to Streamlit Cloud log in and link your GitHub repository.
+3. **Secret keys:** Save your Environmental Variables on your repository secrets.
+4. **Automatic Deployment:** The deployment process is automatically triggered when you push changes to `master` branch.
+5. **Automated Testing:** Every time a new deployment is triggered, the tests saved in `tests/` directory will be run.
+
