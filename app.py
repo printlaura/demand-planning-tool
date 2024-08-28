@@ -32,7 +32,7 @@ def sanitize_input(input):
     return re.fullmatch(r'^[A-Za-z0-9_]{8,24}$', input) is not None
 
 def sanitize_asin(asin):
-    return re.fullmatch(r'^[A-Z0-9_]{10,12}$', asin) is not None
+    return re.fullmatch(r'^[A-Z0-9_]{10}$', asin) is not None
 
 
 def user_login():

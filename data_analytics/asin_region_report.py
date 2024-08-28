@@ -63,7 +63,7 @@ def display_metric(subheader, description, asin, region, data, viz_type, x_axis,
 
 
 def validate_asin(asin):
-    return re.fullmatch(r'^[A-Z0-9]{8,12}$', asin) is not None
+    return re.fullmatch(r'^[A-Z0-9]{10}$', asin) is not None
 
 
 class AsinRegionCase(BaseAnalyticsCase):
