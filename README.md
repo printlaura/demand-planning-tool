@@ -6,7 +6,7 @@ The Demand Plan Tool (DPT) is a web application that aims to provide sales predi
 ## Features
 1. **Forecasting:**
    - Input: Product ID (ASIN), Region.
-   - Output: Sales predictions using a pre-trained LSTM model.
+   - Output: Sales predictions for the upcoming 6 months using a pre-trained LSTM model.
    
 2. **Data Analytics:**
    - Customizable reports based on historical data from the company's Snowflake database.
