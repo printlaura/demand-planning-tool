@@ -18,7 +18,6 @@ sales_data AS
         AND LAST_DAY(DATEADD('month', -1, CURRENT_DATE))
         AND asin = upper('{asin}')
         AND region = upper('{region}')
-        AND year(date) > 2022
     GROUP BY year, month, region, asin
     ORDER BY year DESC, month DESC
 ),
