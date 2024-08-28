@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import patch
-from datetime import datetime
 from data_analytics.brands_region_report import filters_selection, BrandsPerRegionCase
 
 
