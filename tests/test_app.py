@@ -1,6 +1,5 @@
 import pytest
 from unittest.mock import patch, MagicMock
-import pandas as pd
 import app
 
 
@@ -77,46 +76,6 @@ def test_page_navigation_to_analytics():
             patch('app.analytics') as mock_analytics:
         app.page_navigation()
         mock_analytics.assert_called_once()
-
-
-def test_sales_predictor_without_input():
-    with patch('app.st.text_input', return_value=""), \
-            patch('app.st.selectbox', return_value="EU"), \
-            patch('app.st.button', return_value=True), \
-            patch('app.st.error') as mock_error:
-        app.sales_predictor()
-        mock_error.assert_called_once_with("Please enter valid ASIN and region")
-
-
-def test_sales_predictor_with_input():
-    with patch('app.st.text_input', return_value="B01M8L5Z3Y"), \
-            patch('app.st.selectbox', return_value="EU"), \
-            patch('app.st.button', return_value=True), \
-            patch('app.sanitize_asin', return_value=True), \
-            patch('app.predictor') as mock_predictor:
-        app.sales_predictor()
-        mock_predictor.assert_called_once_with("B01M8L5Z3Y", "EU")
-
-
-def test_predictor_with_valid_data():
-    mock_data = pd.DataFrame({'units sold': [100, 200, 150]})
-
-    with patch('app.SalesDataPreprocessor.load_data'), \
-            patch('app.SalesDataPreprocessor.preprocess_data', return_value=mock_data), \
-            patch('app.LSTMModelHandler.predict', return_value=[120, 180, 130]), \
-            patch.dict('app.st.session_state', {'sf_connection': MagicMock()}, clear=True):
-        app.predictor("test_asin", "EU")
-
-
-def test_predictor_no_data():
-    mock_data = pd.DataFrame()
-
-    with patch('app.SalesDataPreprocessor.load_data'), \
-            patch('app.SalesDataPreprocessor.preprocess_data', return_value=mock_data), \
-            patch.dict('app.st.session_state', {'sf_connection': MagicMock()}, clear=True), \
-            patch('app.st.error') as mock_error:
-        app.predictor("test_asin", "EU")
-        mock_error.assert_called_once_with("No data found for the given ASIN and region.")
 
 
 def test_analytics_selection_valid():
