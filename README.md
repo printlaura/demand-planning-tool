@@ -93,6 +93,12 @@ The Demand Plan Tool (DPT) is a web application that aims to provide sales predi
 
 ---
 
+### Directory Structure
+
+![](directory_structure.png)
+
+---
+
 ### Running Security Audit
 
 To ensure that your Python dependencies are secure, you can use the `pip-audit` tool. This tool checks for known vulnerabilities in your dependencies.
