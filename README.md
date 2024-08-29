@@ -28,7 +28,7 @@ The Demand Plan Tool (DPT) is a web application that aims to provide sales predi
 
 1. **Clone the Repository and navigate to the project:**
     ```sh
-    git clone https://github.com/your-username/demand-planning-tool.git
+    git clone https://github.com/printlaura/demand-planning-tool.git
     cd demand-planning-tool
     ```
 2. **Create a Virtual Environment:** 
