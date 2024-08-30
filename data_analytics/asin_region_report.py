@@ -23,6 +23,10 @@ def display_metric(subheader, description, asin, region, data, viz_type, x_axis,
         st.warning("This item has never been Out of Stock.")
         return None
 
+    if data is not None and data[y_axis].sum() == 0:
+        st.warning(f"This item's total {subheader} is 0.")
+        return None
+
     if data is not None and not data[y_axis].isnull().all():
         st.write(description)
 
