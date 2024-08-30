@@ -92,7 +92,7 @@ class BrandsPerRegionCase(BaseAnalyticsCase):
 
                 st.empty()
 
-                display_metric("Net sales", f"Share of the company's total net sales in per brand.",
+                display_metric("Net sales", f"Share of the company's total net sales per brand.",
                                month_name, year, net_sales_data, "pie", "BRAND", "net sales in EUR")
                 display_metric("Units sold", f"Total units sold.", month_name, year, units_sold_data, "bar", "BRAND",
                                "units sold")
