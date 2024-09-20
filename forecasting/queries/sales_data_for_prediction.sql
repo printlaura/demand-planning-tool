@@ -6,6 +6,17 @@ WITH category AS
     WHERE asin = upper('{asin}')
 ),
 
+-- get last 6 months of data available
+distinct_months AS
+(
+    SELECT DISTINCT year(date) AS year, month(date) AS month
+    FROM STREAMLIT_POC.SANDBOX.STOCK_PERFORMANCE_TEST_VIEW
+    WHERE asin = upper('{asin}')
+      AND region = upper('{region}')
+    ORDER BY year DESC, month DESC
+    LIMIT 6
+),
+
 sales_data AS
 (
     SELECT year(date) AS year,
@@ -14,8 +25,8 @@ sales_data AS
            asin,
            IFF(SUM(units_sold) < 0, 0, SUM(units_sold)) AS units_sold
     FROM STREAMLIT_POC.SANDBOX.STOCK_PERFORMANCE_TEST_VIEW
-    WHERE date BETWEEN DATE_TRUNC('month', DATEADD('month', -7, CURRENT_DATE))
-        AND LAST_DAY(DATEADD('month', -1, CURRENT_DATE))
+    WHERE (year(date), month(date)) IN (SELECT year, month FROM distinct_months)
+     --   AND LAST_DAY(DATEADD('month', -1, CURRENT_DATE))
         AND asin = upper('{asin}')
         AND region = upper('{region}')
     GROUP BY year, month, region, asin
