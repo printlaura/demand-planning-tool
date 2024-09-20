@@ -14,7 +14,7 @@ sales_data AS
            asin,
            IFF(SUM(units_sold) < 0, 0, SUM(units_sold)) AS units_sold
     FROM STREAMLIT_POC.SANDBOX.STOCK_PERFORMANCE_TEST_VIEW
-    WHERE date BETWEEN DATE_TRUNC('month', DATEADD('month', -6, CURRENT_DATE))
+    WHERE date BETWEEN DATE_TRUNC('month', DATEADD('month', -7, CURRENT_DATE))
         AND LAST_DAY(DATEADD('month', -1, CURRENT_DATE))
         AND asin = upper('{asin}')
         AND region = upper('{region}')
