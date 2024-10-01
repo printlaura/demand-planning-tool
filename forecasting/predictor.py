@@ -69,7 +69,8 @@ class Predictor:
             else:
                 st.error("No data found for the given ASIN and region.")
         except ValueError as e:
-            st.error(f"Failed to get prediction: {str(e)}")
+            st.error(f"Unable to get prediction for given ASIN and region. Please contact the Data team.")
+            logging.error(f"Failed to get prediction: {str(e)}")
         except Exception as e:
             st.error("An error occurred during prediction.")
             logging.error(f"An error occurred during prediction: {str(e)}.")
