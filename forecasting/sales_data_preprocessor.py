@@ -1,4 +1,6 @@
 import pandas as pd
+import streamlit as st
+import logging
 
 
 class SalesDataPreprocessor:
@@ -10,6 +12,7 @@ class SalesDataPreprocessor:
 
     def load_data(self, conn):
         with open('forecasting/queries/sales_data_for_prediction.sql', 'r') as file:
+       # with open('forecasting/queries/dummy_sales_data_for_edge_case.sql', 'r') as file:
             query = file.read().format(asin=self.asin, region=self.region)
 
         self.df = self.sf_query_executor.execute_query(query, conn)
@@ -19,8 +22,10 @@ class SalesDataPreprocessor:
                              "Try a different combination of ASIN & region.")
 
     def preprocess_data(self):
-        if self.df is None:
+        if self.df is None or self.df.empty:
             raise ValueError("Data not loaded. Please load the data first.")
+
+        self.df = self.check_input_dataset_shape(self.df)
 
         self.df['DATE'] = pd.to_datetime(self.df[['YEAR', 'MONTH']].assign(day=1))
         self.df = self.df.drop(columns=['YEAR'])
@@ -78,3 +83,45 @@ class SalesDataPreprocessor:
                 self.df[column] = 0
 
         self.df = self.df[['UNITS_SOLD', 'PRICE'] + category_columns + month_columns]
+
+    def check_input_dataset_shape(self, df, required_months=6):
+        df = df.sort_values(by=['YEAR', 'MONTH'])
+
+        category = df['CATEGORY'].iloc[0]
+        region = df['REGION'].iloc[0]
+        asin = df['ASIN'].iloc[0]
+
+        earlier_year = df['YEAR'].min()
+        earlier_month = df['MONTH'].min()
+
+        additional_rows_needed = required_months - len(df)
+
+        if additional_rows_needed > 0:
+            st.warning("There is no sufficient historical data, so the accuracy of the prediction may suffer.")
+
+        new_rows = []
+
+        for i in range(additional_rows_needed):
+            if earlier_month == 1:
+                earlier_month = 12
+                earlier_year -= 1
+            else:
+                earlier_month -= 1
+
+            new_row = {
+                'YEAR': earlier_year,
+                'MONTH': earlier_month,
+                'REGION': region,
+                'ASIN': asin,
+                'UNITS_SOLD': 0,
+                'CATEGORY': category,
+                'SALE_PRICE': 0.0
+            }
+            new_rows.append(new_row)
+
+        new_rows_df = pd.DataFrame(new_rows)
+
+        df = pd.concat([new_rows_df, df], ignore_index=True)
+        df = df.tail(required_months).reset_index(drop=True)
+
+        return df

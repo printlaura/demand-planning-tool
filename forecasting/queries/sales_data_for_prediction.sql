@@ -56,7 +56,5 @@ LEFT JOIN sale_price d ON a.asin = d.asin
     AND a.region = d.region
     AND a.year = d.year
     AND a.month = d.month;
-
-
 -----------
 -------
