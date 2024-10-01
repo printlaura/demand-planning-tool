@@ -87,13 +87,16 @@ class SalesDataPreprocessor:
     def check_input_dataset_shape(self, df, required_months=6):
         df = df.sort_values(by=['YEAR', 'MONTH'])
 
+        # values to duplicate
         category = df['CATEGORY'].iloc[0]
         region = df['REGION'].iloc[0]
         asin = df['ASIN'].iloc[0]
 
+        # check earliest date available in the db
         earlier_year = df['YEAR'].min()
         earlier_month = df['MONTH'].min()
 
+        # check how many rows would be missing to get the expected shape
         additional_rows_needed = required_months - len(df)
 
         if additional_rows_needed > 0:
@@ -101,6 +104,7 @@ class SalesDataPreprocessor:
 
         new_rows = []
 
+        # calculate year and month to be added to new row
         for i in range(additional_rows_needed):
             if earlier_month == 1:
                 earlier_month = 12
