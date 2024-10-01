@@ -7,6 +7,7 @@ from .lstm_model_handler import LSTMModelHandler
 from snowflake_query_executor import SnowflakeQueryExecutor
 import re
 import logging
+import numpy as np
 
 
 class Predictor:
@@ -69,7 +70,8 @@ class Predictor:
             else:
                 st.error("No data found for the given ASIN and region.")
         except ValueError as e:
-            st.error(f"Unable to get prediction for given ASIN and region. Please contact the Data team.")
+            st.error(f"Unable to get prediction for given ASIN and region. Try a different combination of ASIN & region. "
+                     f"If the issue persists, please contact the Data team.")
             logging.error(f"Failed to get prediction: {str(e)}")
         except Exception as e:
             st.error("An error occurred during prediction.")
