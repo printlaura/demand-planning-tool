@@ -7,6 +7,7 @@ from .lstm_model_handler import LSTMModelHandler
 from snowflake_query_executor import SnowflakeQueryExecutor
 import re
 import logging
+import numpy as np
 
 
 class Predictor:
@@ -96,3 +97,37 @@ class Predictor:
             fig = px.line(df, x='Date', y='Units')
             fig.update_traces(textposition='top center')
             st.plotly_chart(fig, use_container_width=True)
+
+
+    def check_input_dataset_shape(self, data, required_months=6):
+
+        q_features = 34
+
+        category_first_index = 2
+        category_last_index = 22
+        month_first_index = 23
+        month_last_index = 34
+
+        current_months = len(data)
+
+        if current_months == 0:
+            raise ValueError("There is not historical data available for the given ASIN & region.")
+
+        placeholder_category = data[0][category_first_index:category_last_index]
+
+        while len(data) < required_months:
+            last_month_column_index = max(i for i in range(month_first_index, month_last_index)
+                                          if sum(row[i] for row in data))
+            last_month_value = data[-1][last_month_column_index]
+
+            new_month_column = last_month_column_index - 1 if last_month_column_index > month_first_index \
+                else month_first_index
+
+            # price, units_sold, categories, months
+            placeholder_row = ([0.0] + [0] + placeholder_category +
+                               [1 if i == new_month_column else 0 for i in range(month_first_index, month_last_index)])
+
+            data.append(placeholder_row)
+
+        #ensure correct shape
+        data = np.array(data).reshape((required_months, q_features))
