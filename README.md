@@ -1,7 +1,7 @@
 # Demand Plan Tool (DPT)
 
 ## Overview
-The Demand Plan Tool (DPT) is a web application that aims to provide sales predictions and data visualization capabilities. DPT is developed as an internal tool that allows non-technical users of an e-commerce aggregator company to visualize sales analytics in order to make informed decisions for their company.
+The Demand Plan Tool (DPT) is an MVP of a web application that aims to provide sales predictions and data visualization capabilities. DPT is developed as an internal tool that allows non-technical users of an e-commerce aggregator company to visualize sales analytics in order to make informed decisions for their company.
 
 ---
 
